@@ -13,14 +13,17 @@ RUN apk update \
     libc-dev \
     rsync \
     gcc \
+    g++ \
     python3-dev \
     git \
     py-pip \
     github-cli \
     subversion \
     make \
+    automake \
     openssh-client-default \
-    openssh
+    openssh \
+    python3-dev
 # https://pkgs.alpinelinux.org/package/edge/main/x86/subversion
 # subversion can be used to download github repos subfolders. Great for downloading just a single folder from a repo.
 # Can be run as examples.
