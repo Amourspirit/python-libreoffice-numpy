@@ -19,6 +19,7 @@
         "lxml",
         "mkdirp",
         "nodepath",
+        "Numpy",
         "ooopip",
         "osascript",
         "pipstrings",
