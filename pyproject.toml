@@ -45,7 +45,7 @@ show_progress = true
 delay_startup = true # determines if installing waits fo the window to load before installing
 
 [tool.oxt.requirements]
-numpy = ">=1.26.1"
+numpy = ">=1.24"
 
 [tool.oxt.preinstall.pure]
 # verr = ">=1.1.2"
@@ -55,22 +55,22 @@ en = { name = "___publisher___", url="___publisher_url___" }
 
 [tool.oxt.locale.name]
 en = "___display_name___"
-fr = "Modèle LibreOffice Python Pip"
-de = "LibreOffice Python Pip Vorlage"
-pt = "Modelo LibreOffice Python Pip"
-es = "Plantilla LibreOffice Python Pip"
+fr = "Numpy pour LibreOffice"
+de = "Numpy für LibreOffice"
+pt = "Numpy para LibreOffice"
+es = "Numpy para LibreOffice"
 
 [tool.oxt.locale.desc]
 en = "___description___"
-fr = "Modèle pour créer des extensions basées sur pip pour LibreOffice"
-de = "Vorlage zum Erstellen von pip-basierten Erweiterungen für LibreOffice"
-pt = "Modelo para criar extensões baseadas em pip para o LibreOffice"
-es = "Plantilla para crear extensiones basadas en pip para LibreOffice"
+fr = "Le paquet fondamental pour le calcul scientifique avec Python"
+de = "Das grundlegende Paket für wissenschaftliches Rechnen mit Python"
+pt = "O pacote fundamental para computação científica com Python"
+es = "El paquete fundamental para la computación científica con Python"
 
 
 [tool.poetry]
 name = "Numpy for LibreOffice"
-version = "0.1.0"
+version = "1.0.0"
 description = "Template for creating pip based extensions for for LibreOffice"
 authors = [":Barry-Thomas-Paul: Moss <bigbytetech@gmail.com>"]
 license = "MIT"
