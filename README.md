@@ -1,64 +1,48 @@
-# Python LibreOffice Pip Extension Template
+<p align="center">
+<img src="https://github.com/Amourspirit/python-libreoffice-numpy/assets/4193389/1619cf7e-3400-4833-836d-b97fdf27da1d" alt="OooDev Logo" width="174" height="174">
+</p>
 
-## Introduction
+# Pythn Numpy Extension for LibreOffice
 
-This project is intended to be a template for developers of LibreOffice Extensions.
+[Numpy](https://numpy.org/) is The fundamental package for scientific computing with Python.
 
-Need to create a quick cross platform extension that installs python packages requirements? If so you found the correct template.
+This is a LibreOffice extension that allows you to use Numpy in LibreOffice python macros and scripts.
 
-If you only need to create an extension that installs one or more Python Packages into LibreOffice the no code experience is needed. Simply make a repo from the current template, change configuration, build and your done. A new LibreOffice extension has been generated that will install your python packages when it is installed into LibreOffice. See the [Quick Start](https://github.com/Amourspirit/python-libreoffice-pip/wiki/Quick-Start) in the Wiki.
+## Example
 
-This project is also well suited for developers who want to create a LibreOffice Extension using Python and need to Pip install one or more requirements.
+```python
+from lo_pip_numpy.dialog.message_dialog import MessageDialog
+import numpy as np
 
-All the tools needed to develop, debug, and test are included in this template.
-A developer can use this template to create a LibreOffice Extension that uses Python and Pip install.
 
-The extensions created with this template can be installed cross platform.
+def _show_msg(msg: str, title: str = "Message") -> None:
+    doc = XSCRIPTCONTEXT.getDocument()
+    top_win = doc.CurrentController.Frame.ContainerWindow
 
-Tested on the following:
+    msg_box = MessageDialog(ctx=XSCRIPTCONTEXT.getComponentContext(), parent=top_win, message=msg, title=title)
+    _ = msg_box.execute()
 
-- Windows
-- Windows LibreOffice Portable
-- Mac
-- Linux sudo installed LibreOffice
-- Linux Snap installed LibreOffice
-- Linux Flatpak installed LibreOffice
-- Linux AppImage LibreOffice
 
-For more information see the [Wiki](https://github.com/Amourspirit/python-libreoffice-pip/wiki)
+def np_ex01(*args):
+    # Create a 2-D array, set every second element in
+    # some rows and find max per row:
+    x = np.arange(15, dtype=np.int64).reshape(3, 5)
+    x[1:, ::2] = -99
+    _show_msg(str(x), "Numpy 01")
+    # array([[  0,   1,   2,   3,   4],
+    #        [-99,   6, -99,   8, -99],
+    #        [-99,  11, -99,  13, -99]])
 
-For a working example see the following extensions:
+    _show_msg(str(x.max(axis=1)), "x.max(axis=1)")
+    # array([ 4,  8, 13])
 
-- [OOO Development Tools Extension](https://github.com/Amourspirit/libreoffice_ooodev_ext#readme)
-- [OooDev GUI Automation for Windows](https://github.com/Amourspirit/ooodev-gui-win-ext#readme)
 
-<details>
-<summary>Original Template Readme</summary>
+def np_ex02(*args):
+    # Generate normally distributed random numbers:
+    rng = np.random.default_rng()
+    samples = rng.normal(size=2500)
+    _show_msg(str(samples), "Numpy 02")
 
-# Live LibreOffice Python
 
-Live LibreOffice Python is a complete development environment for creating, debugging and testing python scripts. It leverages the power of [VS Code] and has [LibreOffice] baked in that can be access via the internal web browser or via your local web browser which allows for a much more pleasant and consistent debugging experience.
-
-With the power of [GitHub Codespaces](https://docs.github.com/en/codespaces/overview) it is possible to have [VS Code] and [LibreOffice] running together. One big benefit is a isolated and [VS Code]/[LibreOffice] environment.
-
-Locally a project based upon this template can also be run in a [Development Container](https://code.visualstudio.com/remote/advancedcontainers/overview).
-
-It is also possible to use [GitHub CLI/CD] to create a workflow that test your project with the presents of LibreOffice. This template has a working example of testing using [GitHub CLI/CD].
-
-There are Built in [Tools](https://github.com/Amourspirit/live-libreoffice-python/wiki/Tools) such as [gitget](https://github.com/Amourspirit/live-libreoffice-python/wiki/Tools#gitget) that allow you to quickly add examples to your project from sources such as [LibreOffice Python UNO Examples]. Also there is a built in [console](https://github.com/Amourspirit/live-libreoffice-python/wiki/Console) to help debug the [API](https://api.libreoffice.org/).
-
-This templated can also be leveraged to demonstrate working examples of code.
-
-[![image](https://github.com/Amourspirit/live-libreoffice-python/assets/4193389/35758c26-63b7-48f9-99c0-84dd19b26a8f)](https://github.com/Amourspirit/live-libreoffice-python/assets/4193389/35758c26-63b7-48f9-99c0-84dd19b26a8f)
-
-## Getting Started
-
-See the [Getting Started](https://github.com/Amourspirit/live-libreoffice-python/wiki/Getting-Started) in the [Wiki](https://github.com/Amourspirit/live-libreoffice-python/wiki).
-
-[VS Code]:https://code.visualstudio.com/
-
-[LibreOffice]:https://www.libreoffice.org/
-[GitHub CLI/CD]:https://resources.github.com/ci-cd/
-[LibreOffice Python UNO Examples]:https://github.com/Amourspirit/python-ooouno-ex
-
-</details>
+g_exportedScripts = (np_ex01, np_ex02)
+```
