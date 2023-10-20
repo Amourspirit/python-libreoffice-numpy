@@ -1,5 +1,4 @@
 from __future__ import annotations
-import uno
 
 try:
     from lo_pip_numpy.dialog.message_dialog import MessageDialog
