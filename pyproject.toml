@@ -1,4 +1,4 @@
-# See: https://github.com/Amourspirit/python-libreoffice-numpy/wiki/pyproject.toml
+# See: https://github.com/Amourspirit/python-libreoffice-numpy-ext/wiki/pyproject.toml
 [tool.oxt.config]
 auto_install_in_site_packages = true
 build_dir = "build"
@@ -28,9 +28,9 @@ lo_implementation_name = "NumpyRunner"
 display_name = "Numpy for LibreOffice"
 description = "The fundamental package for scientific computing with Python"
 publisher = "AmourSpirit"
-publisher_url = "https://github.com/Amourspirit/python-libreoffice-numpy"
-update_url_xml = "https://raw.githubusercontent.com/Amourspirit/python-libreoffice-numpy/main/___dist_dir___/___update_file___"
-update_url_oxt = "https://raw.githubusercontent.com/Amourspirit/python-libreoffice-numpy/main/___dist_dir___/___oxt_name___.oxt"
+publisher_url = "https://github.com/Amourspirit/python-libreoffice-numpy-ext"
+update_url_xml = "https://raw.githubusercontent.com/Amourspirit/python-libreoffice-numpy-ext/main/___dist_dir___/___update_file___"
+update_url_oxt = "https://raw.githubusercontent.com/Amourspirit/python-libreoffice-numpy-ext/main/___dist_dir___/___oxt_name___.oxt"
 url_pip = 'https://bootstrap.pypa.io/get-pip.py'
 # set log_file to "" to disable logging
 log_file = "numpy_install.log"
