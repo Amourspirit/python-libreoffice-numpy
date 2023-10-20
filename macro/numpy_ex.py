@@ -5,6 +5,7 @@ try:
     from lo_pip_numpy.dialog.message_dialog import MessageDialog
 except ImportError:
     raise ImportError("The Numpy Extension must be installed from the 'dist' directory before running this macro!")
+import numpy as np
 
 
 def _show_msg(msg: str, title: str = "Message") -> None:
@@ -20,8 +21,6 @@ def msg(*args):
 
 
 def np_ex01(*args):
-    import numpy as np
-
     x = np.arange(15, dtype=np.int64).reshape(3, 5)
     x[1:, ::2] = -99
     _show_msg(str(x), "Numpy 01")
@@ -30,8 +29,6 @@ def np_ex01(*args):
 
 
 def np_ex02(*args):
-    import numpy as np
-
     # Generate normally distributed random numbers:
     rng = np.random.default_rng()
     samples = rng.normal(size=2500)
