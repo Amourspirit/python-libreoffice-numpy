@@ -13,7 +13,7 @@
 	// "features": {},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": [3020, 3021],
+	"forwardPorts": [3030, 3031],
 	"portsAttributes": {
 		"2002": {
 			"onAutoForward": "silent",
@@ -52,7 +52,7 @@
 						]
 					}
 				},
-				"vs-browser.url": "http://localhost:3020"
+				"vs-browser.url": "http://localhost:3030"
 			}
 		}
 	},

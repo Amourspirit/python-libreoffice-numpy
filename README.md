@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://github.com/Amourspirit/python-libreoffice-numpy/assets/4193389/1619cf7e-3400-4833-836d-b97fdf27da1d" alt="OooDev Logo" width="174" height="174">
+<img src="https://github.com/Amourspirit/python-libreoffice-numpy/assets/4193389/1619cf7e-3400-4833-836d-b97fdf27da1d" alt="Numpy Extension Logo" width="174" height="174">
 </p>
 
 # Python Numpy Extension for LibreOffice
@@ -8,7 +8,11 @@
 
 This is a LibreOffice extension that allows you to use Numpy in LibreOffice python macros and scripts.
 
+On LibreOffice Extensions the Numpy extension can be found [here](https://extensions.libreoffice.org/en/extensions/show/41995), locally the NumPy extension can is found in the [dist](./dist) folder.
+
 ## Example
+
+The following is an example macro:
 
 ```python
 from lo_pip_numpy.dialog.message_dialog import MessageDialog
@@ -19,7 +23,12 @@ def _show_msg(msg: str, title: str = "Message") -> None:
     doc = XSCRIPTCONTEXT.getDocument()
     top_win = doc.CurrentController.Frame.ContainerWindow
 
-    msg_box = MessageDialog(ctx=XSCRIPTCONTEXT.getComponentContext(), parent=top_win, message=msg, title=title)
+    msg_box = MessageDialog(
+        ctx=XSCRIPTCONTEXT.getComponentContext(),
+        parent=top_win,
+        message=msg,
+        title=title
+        )
     _ = msg_box.execute()
 
 
@@ -46,3 +55,26 @@ def np_ex02(*args):
 
 g_exportedScripts = (np_ex01, np_ex02)
 ```
+
+## Dev Container
+
+This project is generated from [Python LibreOffice Pip Extension Template](https://github.com/Amourspirit/python-libreoffice-pip) which in turn was generated from the [Live LibreOffice Python Template] This means this project can be run/developed in a Development container or Codespace with full access to LibreOffice.
+
+### Accessing LibreOffice
+
+The ports to access LibreOffice are `3030` for http and `3031` for https.
+
+See also: [How do I access the LibreOffice in a GitHub Codespace?](https://github.com/Amourspirit/live-libreoffice-python/wiki/FAQ#how-do-i-access-the-libreoffice-in-a-github-codespace) on [Live LibreOffice Python Template].
+
+## Running Macro
+
+The example macro is already installed in LibreOffice when the container is started and be found in the [macro](./macro) folder.
+However, the extension must be installed before running the example macro. From LibreOffice open the extension manager, `Tools -> Extension Manager ...` and add `numpy.oxt`
+
+When prompted choose `Only for me`. Restart LibreOffice and numpy will install.
+
+![Add Extension Dialog](https://github.com/Amourspirit/python-libreoffice-numpy-ext/assets/4193389/5b402b34-220e-4164-8b9c-dee3b0aa1930)
+
+![For whom do you want to install the extension dialog box](https://github.com/Amourspirit/python-libreoffice-numpy-ext/assets/4193389/ee0369a2-f2f9-45d9-b093-66a138078f2a)
+
+[Live LibreOffice Python Template]:https://github.com/Amourspirit/live-libreoffice-python
