@@ -7,9 +7,11 @@
         "abstrancmethod",
         "APPIMAGE",
         "applescript",
+        "arange",
         "Codespace",
         "creationflags",
         "datatransfer",
+        "dtype",
         "endregion",
         "flatpak",
         "getpgid",
@@ -34,7 +36,8 @@
         "unohelper",
         "verr",
         "vlang",
-        "vstr"
+        "vstr",
+        "XSCRIPTCONTEXT"
     ],
     "ignoreWords": [],
     "import": []

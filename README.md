@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://github.com/Amourspirit/python-libreoffice-numpy/assets/4193389/1619cf7e-3400-4833-836d-b97fdf27da1d" alt="OooDev Logo" width="174" height="174">
+<img src="https://github.com/Amourspirit/python-libreoffice-numpy/assets/4193389/1619cf7e-3400-4833-836d-b97fdf27da1d" alt="Numpy Extension Logo" width="174" height="174">
 </p>
 
 # Python Numpy Extension for LibreOffice
@@ -8,7 +8,11 @@
 
 This is a LibreOffice extension that allows you to use Numpy in LibreOffice python macros and scripts.
 
+On LibreOffice Extensions the Numpy extension can be found [here](https://extensions.libreoffice.org/en/extensions/show/41995), locally the NumPy extension can is found in the [dist](./dist) folder.
+
 ## Example
+
+The following is an example macro:
 
 ```python
 from lo_pip_numpy.dialog.message_dialog import MessageDialog
@@ -19,7 +23,12 @@ def _show_msg(msg: str, title: str = "Message") -> None:
     doc = XSCRIPTCONTEXT.getDocument()
     top_win = doc.CurrentController.Frame.ContainerWindow
 
-    msg_box = MessageDialog(ctx=XSCRIPTCONTEXT.getComponentContext(), parent=top_win, message=msg, title=title)
+    msg_box = MessageDialog(
+        ctx=XSCRIPTCONTEXT.getComponentContext(),
+        parent=top_win,
+        message=msg,
+        title=title
+        )
     _ = msg_box.execute()
 
 
