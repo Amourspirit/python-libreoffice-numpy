@@ -55,3 +55,26 @@ def np_ex02(*args):
 
 g_exportedScripts = (np_ex01, np_ex02)
 ```
+
+## Dev Container
+
+This project is generated from [Python LibreOffice Pip Extension Template](https://github.com/Amourspirit/python-libreoffice-pip) which in turn was generated from the [Live LibreOffice Python Template] This means this project can be run/developed in a Development container or Codespace with full access to LibreOffice.
+
+### Accessing LibreOffice
+
+The ports to access LibreOffice are `3030` for http and `3031` for https.
+
+See also: [How do I access the LibreOffice in a GitHub Codespace?](https://github.com/Amourspirit/live-libreoffice-python/wiki/FAQ#how-do-i-access-the-libreoffice-in-a-github-codespace) on [Live LibreOffice Python Template].
+
+## Running Macro
+
+The example macro is already installed in LibreOffice when the container is started and be found in the [macro](./macro) folder.
+However, the extension must be installed before running the example macro. From LibreOffice open the extension manager, `Tools -> Extension Manager ...` and add `numpy.oxt`
+
+When prompted choose `Only for me`. Restart LibreOffice and numpy will install.
+
+![Add Extension Dialog](https://github.com/Amourspirit/python-libreoffice-numpy-ext/assets/4193389/5b402b34-220e-4164-8b9c-dee3b0aa1930)
+
+![For whom do you want to install the extension dialog box](https://github.com/Amourspirit/python-libreoffice-numpy-ext/assets/4193389/ee0369a2-f2f9-45d9-b093-66a138078f2a)
+
+[Live LibreOffice Python Template]:https://github.com/Amourspirit/live-libreoffice-python
