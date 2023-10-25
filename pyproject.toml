@@ -46,6 +46,7 @@ delay_startup = true # determines if installing waits fo the window to load befo
 
 [tool.oxt.requirements]
 numpy = ">=1.24"
+ooo-dev-tools = ">=0.12.2"
 
 [tool.oxt.preinstall.pure]
 # verr = ">=1.1.2"
