@@ -45,6 +45,7 @@ from ___lo_pip___.events.lo_events import LoEvents
 from ___lo_pip___.events.args.event_args import EventArgs
 from ___lo_pip___.events.startup.startup_monitor import StartupMonitor
 from ___lo_pip___.events.named_events.startup_events import StartupNamedEvent
+from ___lo_pip___.settings.install_settings import InstallSettings
 
 # endregion imports
 
@@ -174,6 +175,11 @@ class ___lo_implementation_name___(unohelper.Base, XJob):
                 self._logger.error("No internet connection")
                 with contextlib.suppress(Exception):
                     self._error_msg = self.resource_resolver.resolve_string("msg07")
+
+            # Update the config with the install settings
+            # If ooo-dev-tools is set to not install by a user, then remove it from the config.
+            install_settings = InstallSettings()
+            install_settings.update_config()
 
             if self._delay_start:
 
@@ -607,6 +613,12 @@ g_ImplementationHelper.addImplementation(___lo_implementation_name___, implement
 
 g_ImplementationHelper.addImplementation(
     logger_options.OptionsDialogHandler, logger_options.IMPLEMENTATION_NAME, (logger_options.IMPLEMENTATION_NAME,)
+)
+
+from ___lo_pip___.dialog.handler import install as dialog_install
+
+g_ImplementationHelper.addImplementation(
+    dialog_install.OptionsDialogHandler, dialog_install.IMPLEMENTATION_NAME, (dialog_install.IMPLEMENTATION_NAME,)
 )
 
 # uncomment here and int options.xcu to use the example dialog

@@ -37,8 +37,10 @@
                 <info>
                     <desc>
                         Determins if a logging console is to be added.
-                        This can be useful log to the APSO terminal and any other console that LibreOffice is started from.
-                        For production this value should be false as it may have some unintended side effects.
+                        This can be useful log to the APSO terminal and any other console that
+                        LibreOffice is started from.
+                        For production this value should be false as it may have some unintended
+                        side effects.
                     </desc>
                 </info>
             </prop>
@@ -118,8 +120,22 @@
                 <info>
                     <desc>
                         Determins if Delayed startup is used before installing any pip packages.
-                        If set to true, then the extension will wait until a window is available before starting instalation.
-                        This has the advantage of allowing the user to see the progress of the installation via progress dialogs.
+                        If set to true, then the extension will wait until a window is available
+                        before starting instalation.
+                        This has the advantage of allowing the user to see the progress of the
+                        installation via progress dialogs.
+                    </desc>
+                </info>
+            </prop>
+        </group>
+        <group oor:name="Install">
+            <prop oor:name="InstallOooDev" oor:type="xs:boolean">
+                <info>
+                    <desc>
+                        Determins if ooodev python package is to be installed.
+                        Default is true.
+                        This setting is available to allow the user to disable the installation of
+                        odfpy
                     </desc>
                 </info>
             </prop>

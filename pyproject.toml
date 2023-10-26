@@ -12,7 +12,7 @@ token_file_ext = ["txt", "xml", "xcu", "xcs"]
 update_file = "update.xml"
 zip_preinstall_pure = true
 window_timeout = 5 # number of seconds to wait for window to appear
-dialog_desktop_owned = true # determines if the dialog is owned by the desktop window
+dialog_desktop_owned = false # determines if the dialog is owned by the desktop window
 resource_dir_name = "resources"
 resource_properties_prefix = "pipstrings"
 default_locale = ["en", "US"]
@@ -35,7 +35,7 @@ url_pip = 'https://bootstrap.pypa.io/get-pip.py'
 # set log_file to "" to disable logging
 log_file = "numpy_install.log"
 log_name = "Numpy Installer"
-log_level = "DEBUG" # NONE, DEBUG, INFO, WARNING, ERROR, CRITICAL
+log_level = "INFO" # NONE, DEBUG, INFO, WARNING, ERROR, CRITICAL
 log_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 log_add_console = false # should be false for production
 lo_pip = "lo_pip_numpy"
@@ -71,7 +71,7 @@ es = "El paquete fundamental para la computación científica con Python"
 
 [tool.poetry]
 name = "Numpy for LibreOffice"
-version = "1.0.0"
+version = "1.1.0"
 description = "Template for creating pip based extensions for for LibreOffice"
 authors = [":Barry-Thomas-Paul: Moss <bigbytetech@gmail.com>"]
 license = "MIT"

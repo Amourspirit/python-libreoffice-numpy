@@ -15,7 +15,9 @@ On LibreOffice Extensions the Numpy extension can be found [here](https://extens
 The following is an example macro:
 
 ```python
-from lo_pip_numpy.dialog.message_dialog import MessageDialog
+# using OooDev to for easy access to LibreOffice
+from ooodev.dialog.msgbox import MsgBox
+from ooodev.macro.macro_loader import MacroLoader
 import numpy as np
 
 
@@ -31,26 +33,28 @@ def _show_msg(msg: str, title: str = "Message") -> None:
         )
     _ = msg_box.execute()
 
-
 def np_ex01(*args):
-    # Create a 2-D array, set every second element in
-    # some rows and find max per row:
-    x = np.arange(15, dtype=np.int64).reshape(3, 5)
-    x[1:, ::2] = -99
-    _show_msg(str(x), "Numpy 01")
-    # array([[  0,   1,   2,   3,   4],
-    #        [-99,   6, -99,   8, -99],
-    #        [-99,  11, -99,  13, -99]])
+    with MacroLoader():
+        # using MacroLoader so we can use OooDev in macros
+        x = np.arange(15, dtype=np.int64).reshape(3, 5)
+        # Create a 2-D array, set every second element in
+        # some rows and find max per row:
+        x[1:, ::2] = -99
+        _ = MsgBox.msgbox(str(x), "Numpy 01")
+        # array([[  0,   1,   2,   3,   4],
+        #        [-99,   6, -99,   8, -99],
+        #        [-99,  11, -99,  13, -99]])
 
-    _show_msg(str(x.max(axis=1)), "x.max(axis=1)")
-    # array([ 4,  8, 13])
-
+        _ = MsgBox.msgbox(str(x.max(axis=1)).center(50), "x.max(axis=1)")
+        # array([ 4,  8, 13])
 
 def np_ex02(*args):
-    # Generate normally distributed random numbers:
-    rng = np.random.default_rng()
-    samples = rng.normal(size=2500)
-    _show_msg(str(samples), "Numpy 02")
+    with MacroLoader():
+        # using MacroLoader so we can use OooDev in macros.
+        # Generate normally distributed random numbers:
+        rng = np.random.default_rng()
+        samples = rng.normal(size=2500)
+        _ = MsgBox.msgbox(str(samples), "Numpy 02")
 
 
 g_exportedScripts = (np_ex01, np_ex02)
@@ -73,7 +77,8 @@ However, the extension must be installed before running the example macro. From 
 
 When prompted choose `Only for me`. Restart LibreOffice and numpy will install.
 
-![Add Extension Dialog](https://github.com/Amourspirit/python-libreoffice-numpy-ext/assets/4193389/5b402b34-220e-4164-8b9c-dee3b0aa1930)
+![Add Extension Dialog](https://github.com/Amourspirit/python-libreoffice-numpy-ext/assets/4193389/4e6e9046-b51b-4cd1-8961-c0f6724ffaad)
+
 
 ![For whom do you want to install the extension dialog box](https://github.com/Amourspirit/python-libreoffice-numpy-ext/assets/4193389/ee0369a2-f2f9-45d9-b093-66a138078f2a)
 
