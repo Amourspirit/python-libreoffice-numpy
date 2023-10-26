@@ -45,6 +45,7 @@ from ___lo_pip___.events.lo_events import LoEvents
 from ___lo_pip___.events.args.event_args import EventArgs
 from ___lo_pip___.events.startup.startup_monitor import StartupMonitor
 from ___lo_pip___.events.named_events.startup_events import StartupNamedEvent
+from ___lo_pip___.settings.install_settings import InstallSettings
 
 # endregion imports
 
@@ -175,6 +176,11 @@ class ___lo_implementation_name___(unohelper.Base, XJob):
                 with contextlib.suppress(Exception):
                     self._error_msg = self.resource_resolver.resolve_string("msg07")
 
+            # Update the config with the install settings
+            # If ooo-dev-tools is set to not install by a user, then remove it from the config.
+            install_settings = InstallSettings()
+            install_settings.update_config()
+
             if self._delay_start:
 
                 def _on_window_opened(source: Any, event_args: EventArgs, *args, **kwargs) -> None:
@@ -246,6 +252,8 @@ class ___lo_implementation_name___(unohelper.Base, XJob):
             pkg_installer = InstallPkg(ctx=self.ctx)
             self._logger.debug("Created InstallPkg instance")
             pkg_installer.install()
+
+            self._post_install()
 
             if has_window:
                 self._display_complete_dialog()
@@ -526,6 +534,24 @@ class ___lo_implementation_name___(unohelper.Base, XJob):
 
     # endregion Logging
 
+    # region Post Install
+    def _post_install(self) -> None:
+        self._logger.debug("Post Install starting")
+        if not self._config.is_mac and not self._config._is_app_image:
+            self._logger.debug("Not Mac or AppImage. Skipping post install.")
+            return
+        try:
+            from ___lo_pip___.install.post.cpython_link import CPythonLink
+
+            link = CPythonLink()
+            link.link()
+        except Exception as err:
+            self._logger.error(err, exc_info=True)
+            return
+        self._logger.debug("Post Install Done")
+
+    # endregion Post Install
+
     # region Debug
 
     def _show_extra_debug_info(self):
@@ -587,6 +613,12 @@ g_ImplementationHelper.addImplementation(___lo_implementation_name___, implement
 
 g_ImplementationHelper.addImplementation(
     logger_options.OptionsDialogHandler, logger_options.IMPLEMENTATION_NAME, (logger_options.IMPLEMENTATION_NAME,)
+)
+
+from ___lo_pip___.dialog.handler import install as dialog_install
+
+g_ImplementationHelper.addImplementation(
+    dialog_install.OptionsDialogHandler, dialog_install.IMPLEMENTATION_NAME, (dialog_install.IMPLEMENTATION_NAME,)
 )
 
 # uncomment here and int options.xcu to use the example dialog
