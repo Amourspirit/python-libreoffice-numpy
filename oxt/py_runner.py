@@ -154,6 +154,12 @@ class ___lo_implementation_name___(unohelper.Base, XJob):
                 self._show_extra_debug_info()
                 # self._config.extension_info.log_extensions(self._logger)
 
+            # Update the config with the install settings
+            # If ooo-dev-tools is set to not install by a user, then remove it from the config.
+            # This must be done before Requirements Check.
+            install_settings = InstallSettings()
+            install_settings.update_config()
+
             requirements_met = False
             if self._requirements_check.check_requirements() is True and not self._config.has_locals:
                 requirements_met = True
@@ -176,11 +182,6 @@ class ___lo_implementation_name___(unohelper.Base, XJob):
                 self._logger.error("No internet connection")
                 with contextlib.suppress(Exception):
                     self._error_msg = self.resource_resolver.resolve_string("msg07")
-
-            # Update the config with the install settings
-            # If ooo-dev-tools is set to not install by a user, then remove it from the config.
-            install_settings = InstallSettings()
-            install_settings.update_config()
 
             if self._delay_start:
 
@@ -555,7 +556,7 @@ class ___lo_implementation_name___(unohelper.Base, XJob):
 
     # endregion Post Install
 
-# region Import on Load
+    # region Import on Load
     def _import_on_load(self) -> None:
         try:
             from ___lo_pip___.settings.load_settings import LoadSettings
