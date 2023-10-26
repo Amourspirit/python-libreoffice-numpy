@@ -9,18 +9,17 @@ from com.sun.star.beans import XPropertyChangeListener
 
 from ...basic_config import BasicConfig
 from ...lo_util.resource_resolver import ResourceResolver
+
 from ...lo_util.configuration import Configuration, SettingsT
 from ...settings.settings import Settings
 from ...oxt_logger import OxtLogger
-
-# from ...settings.install_settings import InstallSettings
 
 if TYPE_CHECKING:
     from com.sun.star.awt import UnoControlDialog  # service
     from com.sun.star.awt import UnoControlCheckBoxModel
 
 
-IMPLEMENTATION_NAME = f"{BasicConfig().lo_implementation_name}.InstallPage"
+IMPLEMENTATION_NAME = f"{BasicConfig().lo_implementation_name}.OptPage"
 
 
 class CheckBoxListener(unohelper.Base, XPropertyChangeListener):
@@ -38,10 +37,10 @@ class CheckBoxListener(unohelper.Base, XPropertyChangeListener):
         try:
             # state (evn.NewValue) will be 1 for true and 0 for false
             src = cast("UnoControlCheckBoxModel", ev.Source)
-            if src.Name == "chkOooDev":
-                self._logger.debug("CheckBoxListener.propertyChange: chkOooDev")
-                self.handler.install_ooo_dev = self.handler.state_to_bool(cast(int, (ev.NewValue)))
-                self._logger.debug(f"CheckBoxListener.propertyChange: chkOooDev: {self.handler.install_ooo_dev}")
+            if src.Name == "chkNumpy":
+                self.handler.load_numpy = self.handler.state_to_bool(cast(int, (ev.NewValue)))
+            elif src.Name == "chkOooDev":
+                self.handler.load_ooo_dev = self.handler.state_to_bool(cast(int, (ev.NewValue)))
         except Exception as err:
             self._logger.error(f"CheckBoxListener.propertyChange: {err}", exc_info=True)
             raise
@@ -50,19 +49,20 @@ class CheckBoxListener(unohelper.Base, XPropertyChangeListener):
 class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
     def __init__(self, ctx: Any):
         self._logger = OxtLogger(log_name=__name__)
-        self._logger.debug("InstalPage-OptionsDialogHandler.__init__")
+        self._logger.debug("OptionPage-OptionsDialogHandler.__init__")
         self.ctx = ctx
         self._config = BasicConfig()
         self._resource_resolver = ResourceResolver(self.ctx)
-        self._config_node = f"/{self._config.lo_implementation_name}.Settings/Install"
-        self._window_name = "install"
+        self._config_node = f"/{self._config.lo_implementation_name}.Settings/Options"
+        self._window_name = "options"
         self._settings = Settings()
-        self._install_ooo_dev = True
-        self._logger.debug("InstalPage-OptionsDialogHandler.__init__ done")
+        self._load_numpy = False
+        self._load_ooo_dev = False
+        self._logger.debug("OptionPage-OptionsDialogHandler.__init__ done")
 
     # region XContainerWindowEventHandler
     def callHandlerMethod(self, window: UnoControlDialog, eventObject: Any, method: str):
-        self._logger.debug(f"InstalPage-OptionsDialogHandler.callHandlerMethod: {method}")
+        self._logger.debug(f"OptionPage-OptionsDialogHandler.callHandlerMethod: {method}")
         if method == "external_event":
             try:
                 self._handle_external_event(window, eventObject)
@@ -76,7 +76,7 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
     # endregion XContainerWindowEventHandler
 
     def _handle_external_event(self, window: UnoControlDialog, ev_name: str):
-        self._logger.debug(f"InstalPage-OptionsDialogHandler._handle_external_event: {ev_name}")
+        self._logger.debug(f"OptionPage-OptionsDialogHandler._handle_external_event: {ev_name}")
         if ev_name == "ok":
             self._save_data(window)
         elif ev_name == "back":
@@ -87,41 +87,46 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
 
     def _save_data(self, window: UnoControlDialog):
         name = cast(str, window.getModel().Name)  # type: ignore
-        self._logger.debug(f"InstalPage-OptionsDialogHandler._save_data name: {name}")
+        self._logger.debug(f"OptionPage-OptionsDialogHandler._save_data name: {name}")
         if name != self._window_name:
             return
         settings: SettingsT = {
-            "names": ("InstallOooDev",),
-            "values": (self.install_ooo_dev,),  # type: ignore
+            "names": ("OptionLoadNumpy", "OptionLoadOooDev"),
+            "values": (self.load_numpy, self.load_ooo_dev),  # type: ignore
         }
-        self._logger.debug(f"InstalPage-OptionsDialogHandler._save_data settings: {settings}")
+        self._logger.debug(f"OptionPage-OptionsDialogHandler._save_data settings: {settings}")
         self._config_writer(settings)
 
     def _load_data(self, window: UnoControlDialog, ev_name: str):
         # sourcery skip: extract-method
         name = cast(str, window.getModel().Name)  # type: ignore
-        self._logger.debug(f"InstalPage-OptionsDialogHandler._load_data name: {name}")
-        self._logger.debug(f"InstalPage-OptionsDialogHandler._load_data ev_name: {ev_name}")
+        self._logger.debug(f"OptionPage-OptionsDialogHandler._load_data name: {name}")
+        self._logger.debug(f"OptionPage-OptionsDialogHandler._load_data ev_name: {ev_name}")
         if name != self._window_name:
             return
         try:
             settings = self._settings.current_settings
             if settings:
-                self.install_ooo_dev = bool(settings["InstallOooDev"])
+                self.load_numpy = bool(settings["OptionLoadNumpy"])
+                self.load_ooo_dev = bool(settings["OptionLoadOooDev"])
 
+            controls = {
+                "chkOooDev": "OptionLoadOooDev",
+                "chkNumpy": "OptionLoadNumpy",
+            }
             if ev_name == "initialize":
                 listener = CheckBoxListener(self)
                 for control in window.Controls:  # type: ignore
                     # if control.supportsService("com.sun.star.awt.UnoControlCheckBox"):
-                        model = model = control.Model # cast("UnoControlCheckBoxModel", control.Model)
-                        model.Label = self._resource_resolver.resolve_string(model.Label)
-                        
-                        if model.Name == "chkOooDev":
-                            model.State = self.bool_to_state(self.install_ooo_dev)
-                            model.addPropertyChangeListener("State", listener)
+                    model = control.Model # cast("UnoControlCheckBoxModel", control.Model)
+                    model.Label = self._resource_resolver.resolve_string(model.Label)
+                    ctl_value = controls.get(model.Name, None)
+                    if ctl_value and control.supportsService("com.sun.star.awt.UnoControlCheckBox"):
+                        model.State = self.bool_to_state(settings.get(ctl_value, False))
+                        model.addPropertyChangeListener("State", listener)
 
         except Exception as err:
-            self._logger.error(f"InstalPage-OptionsDialogHandler._load_data: {err}", exc_info=True)
+            self._logger.error(f"OptionPage-OptionsDialogHandler._load_data: {err}", exc_info=True)
             raise err
         return
 
@@ -143,9 +148,17 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
         return self._resource_resolver
 
     @property
-    def install_ooo_dev(self) -> bool:
-        return self._install_ooo_dev
+    def load_numpy(self) -> bool:
+        return self._load_numpy
 
-    @install_ooo_dev.setter
-    def install_ooo_dev(self, value: bool):
-        self._install_ooo_dev = value
+    @load_numpy.setter
+    def load_numpy(self, value: bool):
+        self._load_numpy = value
+
+    @property
+    def load_ooo_dev(self) -> bool:
+        return self._load_ooo_dev
+
+    @load_ooo_dev.setter
+    def load_ooo_dev(self, value: bool):
+        self._load_ooo_dev = value
