@@ -21,18 +21,6 @@ from ooodev.macro.macro_loader import MacroLoader
 import numpy as np
 
 
-def _show_msg(msg: str, title: str = "Message") -> None:
-    doc = XSCRIPTCONTEXT.getDocument()
-    top_win = doc.CurrentController.Frame.ContainerWindow
-
-    msg_box = MessageDialog(
-        ctx=XSCRIPTCONTEXT.getComponentContext(),
-        parent=top_win,
-        message=msg,
-        title=title
-        )
-    _ = msg_box.execute()
-
 def np_ex01(*args):
     with MacroLoader():
         # using MacroLoader so we can use OooDev in macros
