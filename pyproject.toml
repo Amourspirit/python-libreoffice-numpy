@@ -48,6 +48,9 @@ delay_startup = true # determines if installing waits fo the window to load befo
 numpy = ">=1.24"
 ooo-dev-tools = ">=0.12.2"
 
+[tool.oxt.isolate]
+windows = ["numpy"]
+
 [tool.oxt.preinstall.pure]
 # verr = ">=1.1.2"
 
@@ -71,7 +74,7 @@ es = "El paquete fundamental para la computación científica con Python"
 
 [tool.poetry]
 name = "Numpy for LibreOffice"
-version = "1.1.2"
+version = "1.2.0"
 description = "Template for creating pip based extensions for for LibreOffice"
 authors = [":Barry-Thomas-Paul: Moss <bigbytetech@gmail.com>"]
 license = "MIT"
