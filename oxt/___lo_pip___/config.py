@@ -438,6 +438,15 @@ class Config(metaclass=Singleton):
         return self._pip_wheel_url
 
     @property
+    def install_on_no_uninstall_permission(self) -> bool:
+        """
+        Gets the flag indicating if a package cannot be uninstalled due to permission error,
+        then it will be installed anyway. This is usually the case when a package is installed
+        in the system packages folder.
+        """
+        return self._basic_config.install_on_no_uninstall_permission
+
+    @property
     def install_wheel(self) -> bool:
         """
         Gets the flag indicating if wheel should be installed.
@@ -550,6 +559,13 @@ class Config(metaclass=Singleton):
         return self._startup_event
 
     @property
+    def uninstall_on_update(self) -> bool:
+        """
+        Gets the flag indicating if python packages should be uninstalled before updating.
+        """
+        return self.basic_config.uninstall_on_update
+
+    @property
     def window_timeout(self) -> int:
         """
         Gets the window timeout value.
@@ -568,6 +584,18 @@ class Config(metaclass=Singleton):
         The value for this property can be set in pyproject.toml (tool.oxt.isolate.windows)
         """
         return self._basic_config.isolate_windows
+
+    @property
+    def sym_link_cpython(self) -> bool:
+        """
+        Gets the flag indicating if CPython files should be symlinked on Linux AppImage and Mac OS.
+
+        The value for this property can be set in pyproject.toml (tool.oxt.config.sym_link_cpython)
+
+        If this is set to ``True`` then CPython will be symlinked on Linux AppImage and Mac OS.
+        """
+        return self._basic_config.sym_link_cpython
+
     # endregion Properties
 
 

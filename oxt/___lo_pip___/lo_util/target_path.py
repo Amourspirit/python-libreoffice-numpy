@@ -5,6 +5,7 @@ from pathlib import Path
 import site
 from ..config import Config
 from ..meta.singleton import Singleton
+from ..oxt_logger import OxtLogger
 
 
 class TargetPath(metaclass=Singleton):
@@ -12,15 +13,20 @@ class TargetPath(metaclass=Singleton):
 
     def __init__(self) -> None:
         self._config = Config()
+        self._logger = OxtLogger(log_name=__name__)
         self._target = self._get_target()
 
     def _get_target(self) -> str:
         if not self._config.is_win:
+            self._logger.debug("Not Windows, returning site-packages path.")
             return self.config.site_packages
         if self.config.is_shared_installed or self.config.is_bundled_installed:
+            self._logger.debug("Shared or bundled installed, returning site-packages path.")
             return self.config.site_packages
         if self.has_other_target:
+            self._logger.debug("Isolated packages, returning isolated path.")
             return self._get_windows_target()
+        self._logger.debug("_get_target(), returning site-packages path.")
         return self.config.site_packages
 
     def _get_windows_target(self) -> str:
@@ -29,6 +35,7 @@ class TargetPath(metaclass=Singleton):
         install_dir = Path(site.USER_BASE) if site.USER_BASE else Path(str(os.getenv("APPDATA"))) / "Roaming/Python"
         bits = "32" if is_32_bit else "64"
         target = install_dir / f"Python{self._config.python_major_minor.replace('.', '')}/{bits}/site-packages"
+        self._logger.debug(f"_get_windows_target(), returning {target}.")
         return str(target)
 
     def ensure_exist(self) -> None:
