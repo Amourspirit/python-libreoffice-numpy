@@ -16,6 +16,9 @@ dialog_desktop_owned = false # determines if the dialog is owned by the desktop 
 resource_dir_name = "resources"
 resource_properties_prefix = "pipstrings"
 default_locale = ["en", "US"]
+sym_link_cpython = true # https://tinyurl.com/ymeh4c9j#sym_link_cpython
+uninstall_on_update = true # https://tinyurl.com/ymeh4c9j#uninstall_on_update uninstall previous python packages on update
+install_on_no_uninstall_permission = true # https://tinyurl.com/ymeh4c9j#install_on_no_uninstall_permission
 
 [tool.oxt.token]
 # in the form of "token_name": "token_value"
@@ -46,7 +49,7 @@ delay_startup = true # determines if installing waits fo the window to load befo
 
 [tool.oxt.requirements]
 numpy = ">=1.24"
-ooo-dev-tools = ">=0.12.2"
+ooo-dev-tools = ">=0.15.0"
 
 [tool.oxt.isolate]
 windows = ["numpy"]
@@ -74,7 +77,7 @@ es = "El paquete fundamental para la computación científica con Python"
 
 [tool.poetry]
 name = "Numpy for LibreOffice"
-version = "1.2.1"
+version = "1.2.2"
 description = "Template for creating pip based extensions for for LibreOffice"
 authors = [":Barry-Thomas-Paul: Moss <bigbytetech@gmail.com>"]
 license = "MIT"

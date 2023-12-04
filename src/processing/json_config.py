@@ -58,6 +58,21 @@ class JsonConfig(metaclass=Singleton):
         except Exception:
             self._isolate_windows = []
 
+        try:
+            self._sym_link_cpython = cast(bool, cfg["tool"]["oxt"]["config"]["sym_link_cpython"])
+        except Exception:
+            self._sym_link_cpython = False
+        try:
+            self._uninstall_on_update = cast(bool, cfg["tool"]["oxt"]["config"]["uninstall_on_update"])
+        except Exception:
+            self._uninstall_on_update = True
+        try:
+            self._install_on_no_uninstall_permission = cast(
+                bool, cfg["tool"]["oxt"]["config"]["install_on_no_uninstall_permission"]
+            )
+        except Exception:
+            self._install_on_no_uninstall_permission = True
+
         self._validate()
 
     def update_json_config(self, json_config_path: Path) -> None:
@@ -78,6 +93,9 @@ class JsonConfig(metaclass=Singleton):
         json_config["resource_dir_name"] = self._resource_dir_name
         json_config["resource_properties_prefix"] = self._resource_properties_prefix
         json_config["isolate_windows"] = self._isolate_windows
+        json_config["sym_link_cpython"] = self._sym_link_cpython
+        json_config["uninstall_on_update"] = self._uninstall_on_update
+        json_config["install_on_no_uninstall_permission"] = self._install_on_no_uninstall_permission
         # json_config["log_pip_installs"] = self._log_pip_installs
         # update the requirements
         json_config["requirements"] = self._requirements
@@ -102,3 +120,8 @@ class JsonConfig(metaclass=Singleton):
         assert len(self._resource_dir_name) > 0, "resource_dir_name must not be an empty string"
         assert isinstance(self._resource_properties_prefix, str), "resource_properties_prefix must be a string"
         assert len(self._resource_properties_prefix) > 0, "resource_properties_prefix must not be an empty string"
+        assert isinstance(self._sym_link_cpython, bool), "sym_link_cpython must be a bool"
+        assert isinstance(self._uninstall_on_update, bool), "uninstall_on_update must be a bool"
+        assert isinstance(
+            self._install_on_no_uninstall_permission, bool
+        ), "_install_on_no_uninstall_permission must be a bool"

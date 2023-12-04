@@ -543,6 +543,11 @@ class ___lo_implementation_name___(unohelper.Base, XJob):
     # region Post Install
     def _post_install(self) -> None:
         self._logger.debug("Post Install starting")
+        if not self._config.sym_link_cpython:
+            self._logger.debug(
+                "Not creating CPython link because configuration has it turned off. Skipping post install."
+            )
+            return
         if not self._config.is_mac and not self._config._is_app_image:
             self._logger.debug("Not Mac or AppImage. Skipping post install.")
             return
@@ -568,10 +573,16 @@ class ___lo_implementation_name___(unohelper.Base, XJob):
 
         target_path = TargetPath()
         if target_path.has_other_target:
+            self._logger.debug("Has other target, ensuring path exists.")
             target_path.ensure_exist()
+        else:
+            self._logger.debug("No other target.")
         if target_path.exist():
+            self._logger.debug("Target path exists, registering.")
             result = self._session.register_path(target_path.target, True)
             self._log_sys_path_register_result(target_path.target, result)
+        else:
+            self._logger.debug("Target path does not exist. Not registering.")
 
     # endregion Isolate
 

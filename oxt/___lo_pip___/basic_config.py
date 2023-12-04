@@ -33,6 +33,9 @@ class BasicConfig(metaclass=ConfigMeta):
         self._resource_dir_name = str(kwargs["resource_dir_name"])
         self._resource_properties_prefix = str(kwargs["resource_properties_prefix"])
         self._isolate_windows = set(kwargs["isolate_windows"])
+        self._sym_link_cpython = bool(kwargs["sym_link_cpython"])
+        self._uninstall_on_update = bool(kwargs["uninstall_on_update"])
+        self._install_on_no_uninstall_permission = bool(kwargs["install_on_no_uninstall_permission"])
 
         if "requirements" not in kwargs:
             kwargs["requirements"] = {}
@@ -83,6 +86,15 @@ class BasicConfig(metaclass=ConfigMeta):
         Gets the flag indicating if the extension has local pip files to install.
         """
         return self._has_locals
+
+    @property
+    def install_on_no_uninstall_permission(self) -> bool:
+        """
+        Gets the flag indicating if a package cannot be uninstalled due to permission error,
+        then it will be installed anyway. This is usually the case when a package is installed
+        in the system packages folder.
+        """
+        return self._install_on_no_uninstall_permission
 
     @property
     def install_wheel(self) -> bool:
@@ -158,6 +170,24 @@ class BasicConfig(metaclass=ConfigMeta):
         This is the prefix for the resource properties.
         """
         return self._resource_properties_prefix
+
+    @property
+    def sym_link_cpython(self) -> bool:
+        """
+        Gets the flag indicating if CPython files should be symlinked on Linux AppImage and Mac OS.
+
+        The value for this property can be set in pyproject.toml (tool.oxt.config.sym_link_cpython)
+
+        If this is set to ``True`` then CPython will be symlinked on Linux AppImage and Mac OS.
+        """
+        return self._sym_link_cpython
+
+    @property
+    def uninstall_on_update(self) -> bool:
+        """
+        Gets the flag indicating if python packages should be uninstalled before updating.
+        """
+        return self._uninstall_on_update
 
     @property
     def window_timeout(self) -> int:
