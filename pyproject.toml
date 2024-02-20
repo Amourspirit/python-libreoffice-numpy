@@ -1,3 +1,17 @@
+[tool.oxt.requirements]
+numpy = ">=1.24"
+ooo-dev-tools = ">=0.29.0"
+
+[tool.poetry]
+name = "Numpy for LibreOffice"
+version = "1.2.4"
+description = "Template for creating pip based extensions for for LibreOffice"
+authors = [":Barry-Thomas-Paul: Moss <bigbytetech@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{ include = "src" }]
+
+
 # See: https://github.com/Amourspirit/python-libreoffice-numpy-ext/wiki/pyproject.toml
 [tool.oxt.config]
 auto_install_in_site_packages = true
@@ -47,9 +61,7 @@ startup_event = "OnStartApp" # OnStartApp or onFirstVisibleTask
 show_progress = true
 delay_startup = true # determines if installing waits fo the window to load before installing
 
-[tool.oxt.requirements]
-numpy = ">=1.24"
-ooo-dev-tools = ">=0.20.2"
+
 
 [tool.oxt.isolate]
 windows = ["numpy"]
@@ -74,15 +86,6 @@ de = "Das grundlegende Paket für wissenschaftliches Rechnen mit Python"
 pt = "O pacote fundamental para computação científica com Python"
 es = "El paquete fundamental para la computación científica con Python"
 
-
-[tool.poetry]
-name = "Numpy for LibreOffice"
-version = "1.2.3"
-description = "Template for creating pip based extensions for for LibreOffice"
-authors = [":Barry-Thomas-Paul: Moss <bigbytetech@gmail.com>"]
-license = "MIT"
-readme = "README.md"
-packages = [{ include = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.8"
