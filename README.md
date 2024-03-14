@@ -16,34 +16,27 @@ The following is an example macro:
 
 ```python
 # using OooDev to for easy access to LibreOffice
-from ooodev.dialog.msgbox import MsgBox
-from ooodev.macro.macro_loader import MacroLoader
-import numpy as np
+from __future__ import annotations
+from ooodev.loader import Lo
+
+try:
+    import numpy as np  # type: ignore
+except ImportError:
+    raise ImportError("The Numpy Extension must be installed before running this macro!")
 
 
 def np_ex01(*args):
-    with MacroLoader():
-        # using MacroLoader so we can use OooDev in macros
-        x = np.arange(15, dtype=np.int64).reshape(3, 5)
-        # Create a 2-D array, set every second element in
-        # some rows and find max per row:
-        x[1:, ::2] = -99
-        _ = MsgBox.msgbox(str(x), "Numpy 01")
-        # array([[  0,   1,   2,   3,   4],
-        #        [-99,   6, -99,   8, -99],
-        #        [-99,  11, -99,  13, -99]])
+    x = np.arange(15, dtype=np.int64).reshape(3, 5)
+    x[1:, ::2] = -99
+    _ = Lo.current_doc.msgbox(str(x), "Numpy 01")
 
-        _ = MsgBox.msgbox(str(x.max(axis=1)).center(50), "x.max(axis=1)")
-        # array([ 4,  8, 13])
+    _ = Lo.current_doc.msgbox(str(x.max(axis=1)).center(50), "x.max(axis=1)")
 
 def np_ex02(*args):
-    with MacroLoader():
-        # using MacroLoader so we can use OooDev in macros.
-        # Generate normally distributed random numbers:
-        rng = np.random.default_rng()
-        samples = rng.normal(size=2500)
-        _ = MsgBox.msgbox(str(samples), "Numpy 02")
-
+    # Generate normally distributed random numbers:
+    rng = np.random.default_rng()
+    samples = rng.normal(size=2500)
+    _ = Lo.current_doc.msgbox(str(samples), "Numpy 02")
 
 g_exportedScripts = (np_ex01, np_ex02)
 ```
