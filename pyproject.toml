@@ -1,10 +1,10 @@
 [tool.oxt.requirements]
 numpy = ">=1.2.4"
-ooo-dev-tools = ">=0.29.0"
+ooo-dev-tools = ">=0.34.0"
 
 [tool.poetry]
 name = "Numpy for LibreOffice"
-version = "1.2.4"
+version = "1.2.5"
 description = "Template for creating pip based extensions for for LibreOffice"
 authors = [":Barry-Thomas-Paul: Moss <bigbytetech@gmail.com>"]
 license = "MIT"
@@ -90,7 +90,7 @@ es = "El paquete fundamental para la computación científica con Python"
 [tool.poetry.dependencies]
 python = "^3.8"
 ooouno = "^2.1.2"
-ooo-dev-tools = "0.12.2"
+ooo-dev-tools = ">=0.34.0"
 toml = "^0.10.2"
 
 
