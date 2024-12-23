@@ -1,16 +1,16 @@
 from __future__ import annotations
-from typing import Iterable, List, Type, Dict
+from typing import Iterable, List, Type
 from .ver_proto import VerProto
 from .carrot import Carrot
 from .equals import Equals
 from .greater import Greater
 from .greater_equal import GreaterEqual
-from .greater import Greater
 from .lesser_equal import LesserEqual
 from .lesser import Lesser
 from .not_equals import NotEquals
 from .tilde import Tilde
 from .wildcard import Wildcard
+from .tilde_eq import TildeEq
 
 # https://www.darius.page/pipdev/
 
@@ -75,6 +75,7 @@ class VerRules:
         self._reg_rule(rule=LesserEqual)
         self._reg_rule(rule=NotEquals)
         self._reg_rule(rule=Tilde)
+        self._reg_rule(rule=TildeEq)
         self._reg_rule(rule=Wildcard)
 
     def split_and_strip(self, string: str) -> List[str]:
@@ -143,7 +144,9 @@ class VerRules:
 
         return is_valid
 
-    def get_installed_is_valid_by_rules(self, rules: Iterable[VerProto], check_version: str) -> bool:
+    def get_installed_is_valid_by_rules(
+        self, rules: Iterable[VerProto], check_version: str
+    ) -> bool:
         """
         Gets if the installed version is valid when compared to this rule.
 
@@ -154,10 +157,11 @@ class VerRules:
         Returns:
             bool: True if the installed version is valid, False otherwise.
         """
-        is_valid = True
         for rule in rules:
-            is_valid = is_valid and rule.get_installed_is_valid(check_version)
+            is_valid = rule.get_installed_is_valid(check_version)
+            if not is_valid:
+                return False
 
-        return is_valid
+        return True
 
     # endregion Methods

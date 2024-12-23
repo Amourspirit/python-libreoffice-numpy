@@ -18,6 +18,8 @@ class Token(metaclass=Singleton):
         for token, replacement in tokens.items():
             self._tokens[f"___{token}___"] = replacement
         self._tokens["___version___"] = str(cfg["project"]["version"])
+        self._tokens["___numpy_req_xml___"] = self.escape_xml(cfg["tool"]["oxt"]["requirements"]["numpy"])
+        self._tokens["___numpy_req___"] = str(cfg["tool"]["oxt"]["requirements"]["numpy"])
         self._tokens["___license___"] = str(cfg["project"]["license"])
         self._tokens["___oxt_name___"] = str(cfg["tool"]["oxt"]["config"]["oxt_name"])
         self._tokens["___dist_dir___"] = str(cfg["tool"]["oxt"]["config"]["dist_dir"])
@@ -145,6 +147,15 @@ class Token(metaclass=Singleton):
             if "name" in author:
                 results.append(author["name"])
         return results
+
+    def escape_xml(self, s: str) -> str:
+        return (
+            s.replace("&", "&amp;")
+            .replace("<", "&lt;")
+            .replace(">", "&gt;")
+            .replace('"', "&quot;")
+            .replace("'", "&apos;")
+        )
 
     # endregion Methods
 

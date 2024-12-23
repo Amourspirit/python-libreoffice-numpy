@@ -40,7 +40,7 @@ def test_is_match(match: str) -> None:
 )
 def test_is_not_match(match: str) -> None:
     rule = Equals(match)
-    assert rule.get_is_match() == False
+    assert rule.get_is_match() is False
 
 
 def test_get_version() -> None:
@@ -163,7 +163,7 @@ def test_get_version_is_valid_suffix(check_ver: str, vstr: str, result: int) -> 
     "check_ver,vstr,result",
     [
         ("1.2.4", "==1.2.4", True),
-        ("1.2.5", "== 1.2.4", True),
+        ("1.2.5", "== 1.2.4", False),
         ("1.2.3", "== 1.2.4", False),
         ("1.2rc1", "==1.2.pre1", True),
         ("1.2rc1", "==1.2.rc1", True),
@@ -171,10 +171,10 @@ def test_get_version_is_valid_suffix(check_ver: str, vstr: str, result: int) -> 
         ("1.2rc2", "==1.2.pre2", True),
         ("1.2dev3", "==1.2.dev3", True),
         ("1.2dev1", "==1.2dev2", False),
-        ("1.2dev3", "==1.2dev2", True),
+        ("1.2dev3", "==1.2dev2", False),
         ("1.2post3", "==1.2.post3", True),
         ("1.2post1", "==1.2post2", False),
-        ("1.2post3", "==1.2post2", True),
+        ("1.2post3", "==1.2post2", False),
     ],
 )
 def test_get_installed_valid(check_ver: str, vstr: str, result: bool) -> None:

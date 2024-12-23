@@ -5,6 +5,7 @@ import shutil
 import stat
 import tempfile
 import pytest
+from .dummy.oxt_logger_dummy import OxtLoggerDummy
 
 
 def remove_readonly(func, path, excinfo):
@@ -21,3 +22,8 @@ def tmp_path_session():
     yield result
     if os.path.exists(result):
         shutil.rmtree(result, onerror=remove_readonly)
+
+
+@pytest.fixture
+def dummy_logger():
+    return OxtLoggerDummy
