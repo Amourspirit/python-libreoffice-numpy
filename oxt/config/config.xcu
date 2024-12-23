@@ -69,12 +69,16 @@
     </prop>
   </node>
   <node oor:name="Options">
+    <prop oor:name="NumpyRequirement" oor:type="xs:string">
+      <value>___numpy_req_xml___</value>
+    </prop>
     <prop oor:name="OptionLoadNumpy" oor:type="xs:boolean">
       <value>false</value>
     </prop>
     <prop oor:name="OptionLoadOooDev" oor:type="xs:boolean">
       <value>false</value>
     </prop>
+
   </node>
   <node oor:name="Install">
     <prop oor:name="InstallOooDev" oor:type="xs:boolean">

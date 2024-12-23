@@ -11,5 +11,11 @@
             dlg:width="198" dlg:height="8" dlg:value="load02" dlg:checked="false" />
         <dlg:text dlg:id="lblStartup" dlg:tab-index="2" dlg:left="5" dlg:top="6" dlg:width="213"
             dlg:height="12" dlg:value="load01" />
+        <dlg:text dlg:id="lblNumpyVersion" dlg:tab-index="0" dlg:left="17" dlg:top="48"
+            dlg:width="213"
+            dlg:height="8" dlg:value="ex01" />
+        <dlg:textfield dlg:id="txtNumpyVersion" dlg:tab-index="2" dlg:left="17" dlg:top="60"
+            dlg:width="213"
+            dlg:height="15" />
     </dlg:bulletinboard>
 </dlg:window>

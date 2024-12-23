@@ -5,7 +5,7 @@ help:
 .PHONY: build diff help
 
 build:
-	uv run make.py build
+	uv run --no-config --link-mode=copy make.py build
 
 create_build_dir:
 	mkdir -p tmp

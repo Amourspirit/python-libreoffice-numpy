@@ -1,6 +1,6 @@
 [project]
 name = "lo-numpy"
-version = "1.2.5"
+version = "2.0.0"
 description = "Numpy for LibreOffice"
 readme = "README.md"
 requires-python = ">=3.8"
@@ -20,19 +20,17 @@ packages = [
 numpy = ">=1.2.4"
 
 
-
-
 # See: https://github.com/Amourspirit/python-libreoffice-numpy-ext/wiki/pyproject.toml
 [tool.oxt.config]
 auto_install_in_site_packages = true
 build_dir = "build"
-dist_dir = "dist" # should be changed to someting like dist, tmp_dist is not included in git
+dist_dir = "tmp_dist" # should be changed to someting like dist, tmp_dist is not included in git
 install_wheel = true
 oxt_name = "numpy"
 py_pkg_dir = "py_pkgs"
 py_pkg_files = []
 py_pkg_names = [] # ["ooodev", "ooo"]
-token_file_ext = ["txt", "xml", "xcu", "xcs"]
+token_file_ext = ["txt", "xml", "xcu", "xcs", "py"]
 update_file = "update.xml"
 zip_preinstall_pure = true
 window_timeout = 5 # number of seconds to wait for window to appear
@@ -62,7 +60,7 @@ url_pip = 'https://bootstrap.pypa.io/get-pip.py'
 # set log_file to "" to disable logging
 log_file = "numpy_install.log"
 log_name = "Numpy Installer"
-log_level = "INFO" # NONE, DEBUG, INFO, WARNING, ERROR, CRITICAL
+log_level = "DEBUG" # NONE, DEBUG, INFO, WARNING, ERROR, CRITICAL
 log_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 log_add_console = false # should be false for production
 lo_pip = "lo_pip_numpy"
@@ -80,10 +78,13 @@ Issues = "https://github.com/Amourspirit/python-libreoffice-numpy-ext/issues"
 dev = [
     "lxml>=5.3.0",
     "ooo-dev-tools>=0.50.0",
+    "packaging>=24.2",
+    "pytest-mock>=3.14.0",
     "pytest>=8.3.4",
     "ruff>=0.8.1",
     "toml>=0.10.2",
     "typing-extensions>=4.12.2",
+    "oooenv>=0.2.4",
 ]
 
 
