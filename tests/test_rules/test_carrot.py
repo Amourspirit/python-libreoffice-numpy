@@ -90,8 +90,16 @@ def test_get_version2(ver: str, expect1: str, expect2: str) -> None:
     assert rule.get_is_match()
     versions = rule.get_versions()
     assert len(versions) == 2
-    assert str(versions[0]) == expect1
-    assert str(versions[1]) == expect2
+    v1 = versions[0]
+    v2 = versions[1]
+    assert str(v1) == expect1
+    assert str(v2) == expect2
+    v1_str = v1.get_pip_ver_str()
+    expected_v1_str = f">={expect1}"
+    assert v1_str == expected_v1_str
+    v2_str = v2.get_pip_ver_str()
+    expected_v2_str = f"<{expect2}"
+    assert v2_str == expected_v2_str
 
 
 def test_get_version_is_valid() -> None:

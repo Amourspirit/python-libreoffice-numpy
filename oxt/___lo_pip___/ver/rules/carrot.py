@@ -62,10 +62,10 @@ class Carrot(VerRuleBase):
             v1 = ReqVersion(f">={ver}")
             if chk_ver.major == 0 and chk_ver.minor == 0:
                 # ^0.0.3	>=0.0.3 <0.0.4
-                v2 = ReqVersion(f"0.0.{chk_ver.micro + 1}")
+                v2 = ReqVersion(f"<0.0.{chk_ver.micro + 1}")
             elif chk_ver.major == 0:
                 # ^0.2.3	>=0.2.3 <0.3.0
-                v2 = ReqVersion(f"0.{chk_ver.minor + 1}.0")
+                v2 = ReqVersion(f"<0.{chk_ver.minor + 1}.0")
             else:
                 v2 = ReqVersion(f"<{v1.major + 1}.0.0")
             return [v1, v2]
@@ -73,8 +73,8 @@ class Carrot(VerRuleBase):
         if vp.has_minor:
             if chk_ver.major == 0 and chk_ver.minor == 0:
                 # ^0.0      >=0.0.0 <0.1.0
-                v1 = ReqVersion("0.0.0")
-                v2 = ReqVersion("0.1.0")
+                v1 = ReqVersion(">=0.0.0")
+                v2 = ReqVersion("<0.1.0")
             else:
                 # ^1.2      >=1.2.0 <2.0.0
                 v1 = ReqVersion(f">={chk_ver.major}.{chk_ver.minor}.0")
@@ -83,11 +83,11 @@ class Carrot(VerRuleBase):
 
         if chk_ver.major == 0:
             # ^0    >=0.0.0 <1.0.0
-            v1 = ReqVersion("0.0.0")
-            v2 = ReqVersion("1.0.0")
+            v1 = ReqVersion(">=0.0.0")
+            v2 = ReqVersion("<1.0.0")
         else:
             # ^1   >=1.0.0 <2.0.0
-            v1 = ReqVersion(f"{chk_ver.major}.0.0")
+            v1 = ReqVersion(f">={chk_ver.major}.0.0")
             v2 = ReqVersion(f"<{v1.major + 1}.0.0")
 
         # if suffix:
