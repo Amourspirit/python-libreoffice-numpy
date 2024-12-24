@@ -21,6 +21,7 @@ from oxt.___lo_pip___.ver.rules.tilde_eq import TildeEq
         ("~=0.1dev1"),
         ("~=0.1pre1"),
         ("~=3.1a1"),
+        ("~=3.1-1"),
     ],
 )
 def test_is_match(match: str) -> None:
@@ -128,6 +129,9 @@ def test_get_version_is_valid() -> None:
         ("1.2post1", "~=1.2post2", -1),
         ("1.2post3", "~=1.2post2", 0),
         ("2.2", "~=1.2post2", 1),
+        ("1.2-3", "~=1.2post2", 0),
+        ("1.2-1", "~=1.2post2", -1),
+        ("2.2-3", "~=1.2post2", 1),
     ],
 )
 def test_get_version_is_valid_suffix(check_ver: str, vstr: str, result: int) -> None:
@@ -157,6 +161,9 @@ def test_get_version_is_valid_suffix(check_ver: str, vstr: str, result: int) -> 
         ("1.2post1", "~=1.2post2", False),
         ("1.2post3", "~=1.2post2", True),
         ("2.2", "~=1.2post2", False),
+        ("1.2-3", "~=1.2post2", True),
+        ("1.2-1", "~=1.2post2", False),
+        ("2.2-3", "~=1.2post2", False),
     ],
 )
 def test_get_installed_valid(check_ver: str, vstr: str, result: bool) -> None:

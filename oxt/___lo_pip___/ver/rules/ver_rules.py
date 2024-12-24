@@ -1,16 +1,17 @@
 from __future__ import annotations
 from typing import Iterable, List, Type
-from .ver_proto import VerProto
 from .carrot import Carrot
 from .equals import Equals
+from .equals_star import EqualsStar
 from .greater import Greater
 from .greater_equal import GreaterEqual
-from .lesser_equal import LesserEqual
 from .lesser import Lesser
+from .lesser_equal import LesserEqual
 from .not_equals import NotEquals
 from .tilde import Tilde
-from .wildcard import Wildcard
 from .tilde_eq import TildeEq
+from .ver_proto import VerProto
+from .wildcard import Wildcard
 
 # https://www.darius.page/pipdev/
 
@@ -69,6 +70,7 @@ class VerRules:
     def _register_known_rules(self):
         self._reg_rule(rule=Carrot)
         self._reg_rule(rule=Equals)
+        self._reg_rule(rule=EqualsStar)
         self._reg_rule(rule=Greater)
         self._reg_rule(rule=GreaterEqual)
         self._reg_rule(rule=Lesser)

@@ -119,6 +119,8 @@ class Carrot(VerRuleBase):
         try:
             check_ver = ReqVersion(f"=={check_version}")
             versions = self.get_versions()
+            if len(versions) != 2:
+                return -2
             v1 = versions[0]
             v2 = versions[1]
             if check_ver >= v1 and check_ver < v2:

@@ -1,5 +1,7 @@
 from __future__ import annotations
-from typing import Any, TYPE_CHECKING, cast
+from typing import Any, TYPE_CHECKING, List, cast
+import contextlib
+
 import uno
 import unohelper
 
@@ -69,7 +71,7 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
         self._logger.debug("OptionPage-OptionsDialogHandler.__init__ done")
 
     # region XContainerWindowEventHandler
-    def callHandlerMethod(
+    def callHandlerMethod(  # type: ignore
         self, xWindow: UnoControlDialog, EventObject: Any, MethodName: str
     ) -> bool:  # type: ignore
         self._logger.debug("callHandlerMethod: %s", MethodName)
@@ -112,18 +114,32 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
             if not txt:
                 txt = self._config.numpy_req  # set back to default if cleared
 
-            # req_ver = ReqVersion(txt)
+            txt = txt.replace(";", ",")
+            txt_versions = txt.split(",")
+
             ver_rules = VerRules()
-            rules = ver_rules.get_matched_rules(txt)
-            if rules:
-                # if req_ver.get_ver_is_valid():
-                self.numpy_requirement = txt  # req_ver.get_pip_ver_str()
-                self._logger.debug(
-                    "_save_data() Numpy Requirement: %s", self.numpy_requirement
-                )
+            matched_rules: List[str] = []
+            for txt_ver in txt_versions:
+                current = txt_ver.strip()
+                if not current:
+                    continue
+                if current == "*":
+                    current = "==*"
+                rules = ver_rules.get_matched_rules(current)
+                if not rules:
+                    continue
+                for rule in rules:
+                    version_parts = rule.get_versions_str().split(",")
+                    for part in version_parts:
+                        matched_rules.append(part.strip())
+
+            if matched_rules:
+                matched_str = ", ".join(matched_rules)
+                self.numpy_requirement = matched_str
+                self._logger.debug("_save_data() Matched Rules: %s", matched_str)
             else:
                 self._logger.error(
-                    "_save_data() Invalid Numpy Requirement: '%s'. Must be in format of ==1.0.0 or >=1.0.0 etc.",
+                    "_save_data() Invalid Numpy Requirement: '%s'. Must be in format of ==1.0.0 or >=1.0.0, <2.0.0 or ^1.0 etc.",
                     txt,
                 )
                 raise InvalidVersion(txt)
@@ -178,6 +194,13 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
                     "OptionsDialogHandler._save_data: %s", err, exc_info=True
                 )
 
+    def get_numpy_version(self):
+        from importlib.metadata import PackageNotFoundError, version
+
+        with contextlib.suppress(PackageNotFoundError):
+            return version("numpy")
+        return ""
+
     def _load_data(self, window: UnoControlDialog, ev_name: str):
         # sourcery skip: extract-method
         name = cast(str, window.getModel().Name)  # type: ignore
@@ -216,9 +239,19 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
                         control.Model
                     )  # cast("UnoControlCheckBoxModel", control.Model)
                     if hasattr(model, "Label"):
-                        model.Label = self._resource_resolver.resolve_string(
-                            model.Label
-                        )
+                        if model.Name == "lblNumpyVersion":
+                            res_val = self._resource_resolver.resolve_string(
+                                model.Label
+                            )
+                            numpy_ver = self.get_numpy_version()
+                            if numpy_ver:
+                                model.Label = res_val.format(f"- {numpy_ver}")
+                            else:
+                                model.Label = res_val.format("").rstrip()
+                        else:
+                            model.Label = self._resource_resolver.resolve_string(
+                                model.Label
+                            )
                     settings_key = control_options.get(model.Name, None)
                     if not settings_key:
                         self._logger.debug(
@@ -248,7 +281,10 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
                             "_load_data() txt_ctl_value: %s", txt_ctl_value
                         )
                         txt_control.setText(txt_ctl_value)
-                        # model.Text = control_values.get(ctl_value, "")
+                        if model.Name == "txtNumpyVersion":
+                            model.HelpText = self._resource_resolver.resolve_string(
+                                "dlgOptVerHelp"
+                            )
 
         except Exception as err:
             self._logger.error("_load_data(): %s", err, exc_info=True)
