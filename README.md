@@ -63,4 +63,10 @@ When prompted choose `Only for me`. Restart LibreOffice and numpy will install.
 
 ![For whom do you want to install the extension dialog box](https://github.com/Amourspirit/python-libreoffice-numpy-ext/assets/4193389/ee0369a2-f2f9-45d9-b093-66a138078f2a)
 
+## Numpy Version
+
+Numpy version can be changed in the extension options.
+
+![Extension Options showing how to set Numpy Version](https://github.com/user-attachments/assets/f3ae7368-e2fa-4fd1-a565-a49e87c74628)
+
 [Live LibreOffice Python Template]:https://github.com/Amourspirit/live-libreoffice-python

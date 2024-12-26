@@ -2,6 +2,7 @@
 from __future__ import annotations
 import sys
 import argparse
+import datetime
 from src.build import Build
 from src.build_args import BuildArgs
 
@@ -32,7 +33,7 @@ def _args_action_build(args: argparse.Namespace) -> None:
     )
     print("Processing...", end="", flush=True)
     builder.build()
-    print("Done!")
+    print(f'Build Finished {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
 
 
 def _args_add_sub_build(parser: argparse.ArgumentParser) -> None:

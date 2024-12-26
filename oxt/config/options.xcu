@@ -56,7 +56,7 @@
                         <value>0</value>
                     </prop>
                 </node>
-                <node oor:name="___lo_identifier___.install" oor:op="fuse">
+                <!-- <node oor:name="___lo_identifier___.install" oor:op="fuse">
                     <prop oor:name="Id">
                         <value>___lo_identifier___</value>
                     </prop>
@@ -75,7 +75,7 @@
                     <prop oor:name="GroupIndex">
                         <value>0</value>
                     </prop>
-                </node>
+                </node> -->
                 <!-- <node oor:name="___lo_identifier___.ex" oor:op="fuse">
                 <prop oor:name="Id">
                     <value>___lo_identifier___</value>

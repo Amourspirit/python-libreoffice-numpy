@@ -589,20 +589,16 @@ class ___lo_implementation_name___(unohelper.Base, XJob):
     # region Import on Load
     def _import_on_load(self) -> None:
         try:
-            from ___lo_pip___.settings.load_settings import LoadSettings
+            from ___lo_pip___.settings.options import Options
 
             self._logger.debug("Starting _import_on_load")
 
-            settings = LoadSettings()
+            settings = Options()
             if settings.load_numpy:
                 with contextlib.suppress(ImportError):
-                    import numpy  # type: ignore
+                    import numpy  # type: ignore  # noqa: F401
 
                     self._logger.debug("Imported numpy")
-
-            if settings.load_ooo_dev:
-                with contextlib.suppress(ImportError):
-                    import ooodev  # type: ignore
 
                     self._logger.debug("Imported ooodev")
         except Exception as err:
