@@ -212,9 +212,11 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
             settings = self._settings.current_settings
             if settings:
                 self.load_numpy = bool(settings["OptionLoadNumpy"])
+                self._load_numpy_original = self.load_numpy
                 self.numpy_requirement = str(
                     settings.get("NumpyRequirement", self._config.numpy_req)
                 )
+                self._numpy_requirement_original = self.numpy_requirement
                 self._logger.debug("_load_data() Load Numpy: %s", self.load_numpy)
                 self._logger.debug(
                     "_load_data() Numpy Requirement: %s", self.numpy_requirement
