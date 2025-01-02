@@ -111,38 +111,41 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
         try:
             txt_np_ver = cast("UnoControlEdit", window.getControl("txtNumpyVersion"))
             txt = txt_np_ver.getText()
-            if not txt:
-                txt = self._config.numpy_req  # set back to default if cleared
+            # if not txt:
+            #     txt = self._config.numpy_req  # set back to default if cleared
+            if txt:
+                txt = txt.replace(";", ",")
+                txt_versions = txt.split(",")
 
-            txt = txt.replace(";", ",")
-            txt_versions = txt.split(",")
+                ver_rules = VerRules()
+                matched_rules: List[str] = []
+                for txt_ver in txt_versions:
+                    current = txt_ver.strip()
+                    if not current:
+                        continue
+                    if current == "*":
+                        current = "==*"
+                    rules = ver_rules.get_matched_rules(current)
+                    if not rules:
+                        continue
+                    for rule in rules:
+                        version_parts = rule.get_versions_str().split(",")
+                        for part in version_parts:
+                            matched_rules.append(part.strip())
 
-            ver_rules = VerRules()
-            matched_rules: List[str] = []
-            for txt_ver in txt_versions:
-                current = txt_ver.strip()
-                if not current:
-                    continue
-                if current == "*":
-                    current = "==*"
-                rules = ver_rules.get_matched_rules(current)
-                if not rules:
-                    continue
-                for rule in rules:
-                    version_parts = rule.get_versions_str().split(",")
-                    for part in version_parts:
-                        matched_rules.append(part.strip())
-
-            if matched_rules:
-                matched_str = ", ".join(matched_rules)
-                self.numpy_requirement = matched_str
-                self._logger.debug("_save_data() Matched Rules: %s", matched_str)
+                if matched_rules:
+                    matched_str = ", ".join(matched_rules)
+                    self.numpy_requirement = matched_str
+                    self._logger.debug("_save_data() Matched Rules: %s", matched_str)
+                else:
+                    self._logger.error(
+                        "_save_data() Invalid Numpy Requirement: '%s'. Must be in format of ==1.0.0 or >=1.0.0, <2.0.0 or ^1.0 etc.",
+                        txt,
+                    )
+                    raise InvalidVersion(txt)
             else:
-                self._logger.error(
-                    "_save_data() Invalid Numpy Requirement: '%s'. Must be in format of ==1.0.0 or >=1.0.0, <2.0.0 or ^1.0 etc.",
-                    txt,
-                )
-                raise InvalidVersion(txt)
+                self.numpy_requirement = ""
+                self._logger.debug("_save_data() No version enterred")
 
             settings: SettingsT = {
                 "names": ("OptionLoadNumpy", "NumpyRequirement"),
@@ -213,14 +216,15 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
             if settings:
                 self.load_numpy = bool(settings["OptionLoadNumpy"])
                 self._load_numpy_original = self.load_numpy
-                self.numpy_requirement = str(
-                    settings.get("NumpyRequirement", self._config.numpy_req)
-                )
+                self.numpy_requirement = str(settings.get("NumpyRequirement", ""))
                 self._numpy_requirement_original = self.numpy_requirement
                 self._logger.debug("_load_data() Load Numpy: %s", self.load_numpy)
-                self._logger.debug(
-                    "_load_data() Numpy Requirement: %s", self.numpy_requirement
-                )
+                if self.numpy_requirement:
+                    self._logger.debug(
+                        "_load_data() Numpy Requirement: %s", self.numpy_requirement
+                    )
+                else:
+                    self._logger.debug("_load_data() Numpy Requirement not set.")
 
             control_options = {
                 "chkNumpy": "OptionLoadNumpy",

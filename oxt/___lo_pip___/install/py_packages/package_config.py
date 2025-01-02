@@ -1,6 +1,6 @@
 from __future__ import annotations
 from pathlib import Path
-from typing import Dict, List
+from typing import Any, Dict, List
 import json
 
 from ...basic_config import BasicConfig
@@ -33,7 +33,7 @@ class PackageConfig:
 
     # region Properties
     @property
-    def py_packages(self) -> List[Dict[str, str]]:
+    def py_packages(self) -> List[Dict[str, Any]]:
         return self._py_packages
 
     # endregion Properties

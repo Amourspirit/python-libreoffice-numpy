@@ -342,15 +342,6 @@ class Config(metaclass=Singleton):
         return self._log_format
 
     @property
-    def numpy_req(self) -> str:
-        """
-        Gets the Numpy Requirement defined in pyproject.toml.
-
-        The value for this property can be set in pyproject.toml (tool.oxt.requirements.numpy)
-        """
-        return self._basic_config.numpy_req
-
-    @property
     def py_pkg_dir(self) -> str:
         """
         Gets the name of the directory where python packages are installed as a zip.

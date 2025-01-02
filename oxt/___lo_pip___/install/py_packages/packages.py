@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, Dict
+from typing import Any, List, Dict
 import sys
 
 from .py_package import PyPackage
@@ -8,6 +8,7 @@ from ...config import Config
 from ...oxt_logger import OxtLogger
 from ...ver.req_version import ReqVersion
 from ...ver.rules.ver_rules import VerRules
+from ...settings.options import Options
 
 
 class Packages:
@@ -65,11 +66,17 @@ class Packages:
             nonlocal ver_rules
 
             if check_version_constraints(rule):
-                self._log.debug("Python version %s for %s satisfies all constraints.", self._py_ver, rule.name)
+                self._log.debug(
+                    "Python version %s for %s satisfies all constraints.",
+                    self._py_ver,
+                    rule.name,
+                )
             else:
                 self._log.debug(
                     self._log.debug(
-                        "Python version %s for %s does not satisfies all constraints.", self._py_ver, rule.name
+                        "Python version %s for %s does not satisfies all constraints.",
+                        self._py_ver,
+                        rule.name,
                     )
                 )
                 return False
@@ -89,13 +96,58 @@ class Packages:
             return rule.is_platform(platform)
 
         pkg_cfg = PackageConfig()
-        for rule in pkg_cfg.py_packages:
+        py_packages = pkg_cfg.py_packages.copy()
+        py_packages = self.process_packages(py_packages)
+        for rule in py_packages:
             gi = PyPackage.from_dict(**rule)
             if is_valid(gi):
                 self._log.debug("Adding rule: %s}", gi)
                 self.add_pkg(gi)
             else:
                 self._log.debug("Ignoring rule: %s}", gi)
+
+    def process_packages(self, packages: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """
+        Process packages.
+
+        If Numpy requirement is set in options, override Numpy packages to versions set in options.
+
+        Args:
+            packages (List[Dict[str, str]]): List of packages to process
+        """
+
+        opt = Options()
+        if not opt.numpy_requirement:
+            self._log.debug("process_packages() No Numpy requirement set in options.")
+            return packages
+        rules = VerRules()
+        matched_rules = rules.get_matched_rules(opt.numpy_requirement)
+        if not matched_rules:
+            self._log.error("process_packages() No rules matched for Numpy.")
+            return packages
+
+        req_versions: List[ReqVersion] = []
+        for rule in matched_rules:
+            version_parts = rule.get_versions_str().split(",")
+            for part in version_parts:
+                req_versions.append(ReqVersion(part))
+
+        if not req_versions:
+            self._log.error("process_packages() No versions found for Numpy.")
+            return packages
+        # remove numpy from packages
+        packages = [pkg for pkg in packages if pkg.get("name") != "numpy"]
+
+        for ver in req_versions:
+            packages.append(
+                {
+                    "name": "numpy",
+                    "version": str(ver),
+                    "restriction": ver.prefix,
+                    "platforms": ["all"],
+                }
+            )
+        return packages
 
     def __len__(self) -> int:
         return len(self._packages)
@@ -127,7 +179,7 @@ class Packages:
         if pkg in self._packages:
             self._log.debug("add_pkg() Rule Already added: %s", pkg)
             return
-        self._log.debug("add_pkg() Adding Rule %s", self.__class__.__name__, pkg)
+        self._log.debug("add_pkg() Adding Rule %s", pkg)
         self._add_pkg(pkg=pkg)
 
     def remove_package(self, pkg: PyPackage):

@@ -9,13 +9,20 @@ if __name__ == "__main__":
 
 if TYPE_CHECKING:
     from pytest_mock import MockerFixture
+    from oxt.___lo_pip___.install.py_packages.py_package import PyPackage
 
 
 @pytest.mark.parametrize(
     "is_flatpak,is_snap,os_name,py_version,num_pkg,packages",
     [
         pytest.param(
-            False, False, "linux", "3.8.0", 1, [{"name": "requests", "version": "3.9.0"}], id="simple version"
+            False,
+            False,
+            "linux",
+            "3.8.0",
+            1,
+            [{"name": "requests", "version": "3.9.0"}],
+            id="simple version",
         ),
         pytest.param(
             False,
@@ -109,7 +116,13 @@ if TYPE_CHECKING:
             "linux",
             "3.12.0",
             0,
-            [{"name": "requests", "version": "3.9.0", "python_versions": [">=3.9", "!=3.12"]}],
+            [
+                {
+                    "name": "requests",
+                    "version": "3.9.0",
+                    "python_versions": [">=3.9", "!=3.12"],
+                }
+            ],
             id="Not equal python version 3.12",
         ),
         pytest.param(
@@ -118,7 +131,13 @@ if TYPE_CHECKING:
             "linux",
             "3.8.0",
             0,
-            [{"name": "requests", "version": "3.9.0", "ignore_platforms": ["mac", "flatpak"]}],
+            [
+                {
+                    "name": "requests",
+                    "version": "3.9.0",
+                    "ignore_platforms": ["mac", "flatpak"],
+                }
+            ],
             id="ignore flatpak",
         ),
         pytest.param(
@@ -204,16 +223,19 @@ def test_packages(
 
     _ = mocker.patch("oxt.___lo_pip___.install.py_packages.packages.OxtLogger")
 
-    mock_pkg_config = mocker.patch("oxt.___lo_pip___.install.py_packages.packages.PackageConfig")
+    mock_pkg_config = mocker.patch(
+        "oxt.___lo_pip___.install.py_packages.packages.PackageConfig"
+    )
     mock_pkg_config_instance = mock_pkg_config.return_value
     py_packages = packages  # [{"name": "requests", "version": "3.9.0"}]
     # mocked_instance.py_packages.return_value = py_packages
     mock_pkg_config_instance.py_packages = py_packages
 
-    if TYPE_CHECKING:
-        from ...oxt.___lo_pip___.install.py_packages.packages import Packages
-    else:
-        from oxt.___lo_pip___.install.py_packages.packages import Packages
+    mock_options = mocker.patch("oxt.___lo_pip___.install.py_packages.packages.Options")
+    mock_options_instance = mock_options.return_value
+    mock_options_instance.numpy_requirement = ""
+
+    from oxt.___lo_pip___.install.py_packages.packages import Packages
 
     mocker.patch.object(Packages, "_get_py_ver", side_effect=get_py_version)
 
@@ -225,7 +247,13 @@ def test_packages(
     "is_flatpak,is_snap,os_name,py_version,match_count,packages",
     [
         pytest.param(
-            False, False, "linux", "3.8.0", 1, [{"name": "requests", "version": "3.9.0"}], id="simple version"
+            False,
+            False,
+            "linux",
+            "3.8.0",
+            1,
+            [{"name": "requests", "version": "3.9.0"}],
+            id="simple version",
         ),
         pytest.param(
             False,
@@ -346,18 +374,20 @@ def test_packages_rules(
 
     _ = mocker.patch("oxt.___lo_pip___.install.py_packages.packages.OxtLogger")
 
-    mock_pkg_config = mocker.patch("oxt.___lo_pip___.install.py_packages.packages.PackageConfig")
+    mock_pkg_config = mocker.patch(
+        "oxt.___lo_pip___.install.py_packages.packages.PackageConfig"
+    )
     mock_pkg_config_instance = mock_pkg_config.return_value
     py_packages = packages  # [{"name": "requests", "version": "3.9.0"}]
     # mocked_instance.py_packages.return_value = py_packages
     mock_pkg_config_instance.py_packages = py_packages
 
-    if TYPE_CHECKING:
-        from ...oxt.___lo_pip___.install.py_packages.packages import Packages
-        from ...oxt.___lo_pip___.ver.rules.ver_rules import VerRules
-    else:
-        from oxt.___lo_pip___.install.py_packages.packages import Packages
-        from oxt.___lo_pip___.ver.rules.ver_rules import VerRules
+    mock_options = mocker.patch("oxt.___lo_pip___.install.py_packages.packages.Options")
+    mock_options_instance = mock_options.return_value
+    mock_options_instance.numpy_requirement = ""
+
+    from oxt.___lo_pip___.install.py_packages.packages import Packages
+    from oxt.___lo_pip___.ver.rules.ver_rules import VerRules
 
     mocker.patch.object(Packages, "_get_py_ver", side_effect=get_py_version)
 
@@ -370,3 +400,101 @@ def test_packages_rules(
         rule = matched_rules[0]
         versions = rule.get_versions()
         assert len(versions) == match_count
+
+
+@pytest.mark.parametrize(
+    "py_version,opt_ver,match_count",
+    [
+        pytest.param(
+            "3.8.0",
+            ">=1.2.4",
+            1,
+            id="simple version",
+        ),
+        pytest.param(
+            "3.8.0",
+            "^1.2",
+            2,
+            id="carrot version",
+        ),
+        pytest.param(
+            "3.8.0",
+            ">=1.2, <1.3",
+            2,
+            id="Greater equal and Less than version",
+        ),
+    ],
+)
+def test_packages_option_override(
+    py_version: str,
+    opt_ver: str,
+    match_count: int,
+    mocker: MockerFixture,
+):
+    # this test simulates the option override of numpy package.
+    # It simulate that the user has entered a version of numpy that is different from the default version.
+    packages = [
+        {
+            "name": "numpy",
+            "version": "1.24.4",
+            "restriction": "==",
+            "platforms": ["all"],
+            "python_versions": ["<3.9"],
+        },
+        {
+            "name": "numpy",
+            "version": "2.0",
+            "restriction": "~",
+            "platforms": ["all"],
+            "python_versions": [">=3.9", "<=3.10"],
+        },
+        {
+            "name": "numpy",
+            "version": "2.2",
+            "restriction": ">=",
+            "platforms": ["all"],
+            "python_versions": [">=3.10"],
+        },
+    ]
+
+    def get_py_version():
+        return py_version
+
+    mock_config = mocker.patch("oxt.___lo_pip___.install.py_packages.packages.Config")
+    mock_config_instance = mock_config.return_value
+    mock_config_instance.is_flatpak = False
+    mock_config_instance.is_snap = False
+    mock_config_instance.is_win = False
+    mock_config_instance.is_mac = False
+    mock_config_instance.is_linux = True
+
+    _ = mocker.patch("oxt.___lo_pip___.install.py_packages.packages.OxtLogger")
+
+    mock_pkg_config = mocker.patch(
+        "oxt.___lo_pip___.install.py_packages.packages.PackageConfig"
+    )
+    mock_pkg_config_instance = mock_pkg_config.return_value
+    mock_pkg_config_instance.py_packages = packages
+
+    mock_options = mocker.patch("oxt.___lo_pip___.install.py_packages.packages.Options")
+    mock_options_instance = mock_options.return_value
+    mock_options_instance.numpy_requirement = opt_ver
+
+    from oxt.___lo_pip___.install.py_packages.packages import Packages
+    from oxt.___lo_pip___.ver.req_version import ReqVersion
+
+    mocker.patch.object(Packages, "_get_py_ver", side_effect=get_py_version)
+
+    pkgs = Packages()
+    matched_numpy: List[PyPackage] = []
+    # ver_rules = VerRules()
+    for pkg in pkgs.packages:
+        if pkg.name == "numpy":
+            matched_numpy.append(pkg)
+
+    assert len(matched_numpy) == match_count
+
+    if not opt_ver.startswith(("^", "~", "!=")):
+        first = matched_numpy[0]
+        first_ver = ReqVersion(opt_ver.split(",")[0])
+        assert first.name_version == ("numpy", f"{first_ver.prefix}{first_ver}")

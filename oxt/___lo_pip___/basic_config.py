@@ -41,7 +41,6 @@ class BasicConfig(metaclass=ConfigMeta):
         self._install_on_no_uninstall_permission = bool(
             kwargs["install_on_no_uninstall_permission"]
         )
-        self._numpy_req = str(kwargs["numpy_req"])
         self._oxt_name = str(kwargs["oxt_name"])
         self._extension_version = str(kwargs["extension_version"])
         self._extension_license = str(kwargs["extension_license"])
@@ -165,15 +164,6 @@ class BasicConfig(metaclass=ConfigMeta):
         The value for this property can be set in pyproject.toml (tool.oxt.token.lo_pip)
         """
         return self._lo_pip_dir
-
-    @property
-    def numpy_req(self) -> str:
-        """
-        Gets the Numpy Requirement defined in pyproject.toml.
-
-        The value for this property can be set in pyproject.toml (tool.oxt.requirements.numpy)
-        """
-        return self._numpy_req
 
     @property
     def oxt_name(self) -> str:

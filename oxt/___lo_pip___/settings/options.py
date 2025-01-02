@@ -13,7 +13,7 @@ class Options(metaclass=Singleton):
         self._configuration = Configuration()
         self._node_value = f"/{settings.lo_implementation_name}.Settings/Options"
 
-        self._numpy_requirement = str(settings.current_settings.get("NumpyRequirement", "___numpy_req___"))
+        self._numpy_requirement = str(settings.current_settings.get("NumpyRequirement", ""))
         self._load_numpy = bool(settings.current_settings.get("OptionLoadNumpy", False))
         self._load_ooo_dev = bool(settings.current_settings.get("OptionLoadOooDev", False))
 
