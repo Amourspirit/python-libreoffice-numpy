@@ -133,8 +133,9 @@ class Config(metaclass=Singleton):
     # region Methods
     def _set_requirements(self, req: Dict[str, str]) -> None:
         if "numpy" not in req:
-            self._logger.error("Numpy requirement not set in pyproject.toml")
-            return
+            self._logger.debug(
+                "Numpy requirement not part of pyproject.toml tool.oxt.requirements"
+            )
         from .settings.options import Options
 
         options = Options()
