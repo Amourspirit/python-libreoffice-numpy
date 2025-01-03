@@ -119,6 +119,13 @@ class JsonConfig(metaclass=Singleton):
             self._py_packages = []
         # endregion Requirements Rule
 
+        # region Project Specific
+        self._package_name = cast(
+            str, self._cfg["tool"]["oxt"]["config"]["package_name"]
+        )
+
+        # endregion Project Specific
+
         self._validate()
         self._warnings()
 
@@ -162,6 +169,10 @@ class JsonConfig(metaclass=Singleton):
         # region Requirements Rule
         json_config["py_packages"] = self._py_packages
         # endregion Requirements Rule
+
+        # region Project Specific
+        json_config["package_name"] = self._package_name
+        # endregion Project Specific
 
         # save the file
         with open(json_config_path, "w", encoding="utf-8") as f:

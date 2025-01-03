@@ -129,10 +129,10 @@
             </prop>
         </group>
         <group oor:name="Options">
-            <prop oor:name="NumpyRequirement" oor:type="xs:string">
+            <prop oor:name="PackageRequirement" oor:type="xs:string">
                 <info>
                     <desc>
-                        Determines the numpy version that is to be installed.
+                        Determines the package version that is to be installed.
                     </desc>
                 </info>
             </prop>
