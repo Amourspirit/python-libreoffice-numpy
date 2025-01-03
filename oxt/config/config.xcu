@@ -70,7 +70,7 @@
   </node>
   <node oor:name="Options">
     <prop oor:name="NumpyRequirement" oor:type="xs:string">
-      <value>___numpy_req_xml___</value>
+      <value></value>
     </prop>
     <prop oor:name="OptionLoadNumpy" oor:type="xs:boolean">
       <value>false</value>
