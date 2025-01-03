@@ -1,6 +1,6 @@
 [project]
 name = "lo-numpy"
-version = "2.1.0"
+version = "2.2.0"
 description = "Numpy for LibreOffice"
 readme = "README.md"
 requires-python = ">=3.8"
