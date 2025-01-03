@@ -17,9 +17,9 @@ from ...settings.settings import Settings
 from ...oxt_logger import OxtLogger
 
 # from ...ver.req_version import ReqVersion
-from ...ver.rules.ver_rules import VerRules
+# from ...ver.rules.ver_rules import VerRules
 from ..message_dialog import MessageDialog
-from packaging.version import InvalidVersion
+
 
 if TYPE_CHECKING:
     from com.sun.star.awt import UnoControlDialog  # service
@@ -107,6 +107,16 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
         self._logger.debug("_save_data name: %s", name)
         if name != self._window_name:
             self._logger.debug("_save_data name not equal to window_name. Returning.")
+            return
+        try:
+            from packaging.version import InvalidVersion
+            from ...ver.rules.ver_rules import VerRules
+        except ImportError as err:
+            self._logger.error(
+                "_save_data() Error importing 'packaging.version.InvalidVersion': %s",
+                err,
+                exc_info=True,
+            )
             return
         try:
             txt_pkg_ver = cast("UnoControlEdit", window.getControl("txtPackageVersion"))
