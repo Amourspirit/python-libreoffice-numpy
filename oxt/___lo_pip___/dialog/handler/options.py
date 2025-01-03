@@ -66,8 +66,8 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
         self._settings = Settings()
         self._load_numpy = False
         self._load_numpy_original = False
-        self._numpy_requirement = ""
-        self._numpy_requirement_original = ""
+        self._package_requirement = ""
+        self._package_requirement_original = ""
         self._logger.debug("OptionPage-OptionsDialogHandler.__init__ done")
 
     # region XContainerWindowEventHandler
@@ -88,7 +88,7 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
     # endregion XContainerWindowEventHandler
 
     def _has_log_options_changed(self):
-        if self._numpy_requirement != self._numpy_requirement_original:
+        if self._package_requirement != self._package_requirement_original:
             return True
         return self.load_numpy != self._load_numpy_original
 
@@ -109,8 +109,8 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
             self._logger.debug("_save_data name not equal to window_name. Returning.")
             return
         try:
-            txt_np_ver = cast("UnoControlEdit", window.getControl("txtNumpyVersion"))
-            txt = txt_np_ver.getText()
+            txt_pkg_ver = cast("UnoControlEdit", window.getControl("txtPackageVersion"))
+            txt = txt_pkg_ver.getText()
             # if not txt:
             #     txt = self._config.numpy_req  # set back to default if cleared
             if txt:
@@ -135,7 +135,7 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
 
                 if matched_rules:
                     matched_str = ", ".join(matched_rules)
-                    self.numpy_requirement = matched_str
+                    self.package_requirement = matched_str
                     self._logger.debug("_save_data() Matched Rules: %s", matched_str)
                 else:
                     self._logger.error(
@@ -144,12 +144,12 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
                     )
                     raise InvalidVersion(txt)
             else:
-                self.numpy_requirement = ""
-                self._logger.debug("_save_data() No version enterred")
+                self.package_requirement = ""
+                self._logger.debug("_save_data() No version entered")
 
             settings: SettingsT = {
-                "names": ("OptionLoadNumpy", "NumpyRequirement"),
-                "values": (self.load_numpy, self.numpy_requirement),  # type: ignore
+                "names": ("OptionLoadNumpy", "PackageRequirement"),
+                "values": (self.load_numpy, self.package_requirement),  # type: ignore
             }
             if self._logger.is_debug:
                 self._logger.debug("_save_data() settings: %s" % settings)
@@ -197,11 +197,11 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
                     "OptionsDialogHandler._save_data: %s", err, exc_info=True
                 )
 
-    def get_numpy_version(self):
+    def get_package_version(self):
         from importlib.metadata import PackageNotFoundError, version
 
         with contextlib.suppress(PackageNotFoundError):
-            return version("numpy")
+            return version(self._config.package_name)
         return ""
 
     def _load_data(self, window: UnoControlDialog, ev_name: str):
@@ -216,23 +216,25 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
             if settings:
                 self.load_numpy = bool(settings["OptionLoadNumpy"])
                 self._load_numpy_original = self.load_numpy
-                self.numpy_requirement = str(settings.get("NumpyRequirement", ""))
-                self._numpy_requirement_original = self.numpy_requirement
+                self.package_requirement = str(settings.get("PackageRequirement", ""))
+                self._package_requirement_original = self.package_requirement
                 self._logger.debug("_load_data() Load Numpy: %s", self.load_numpy)
-                if self.numpy_requirement:
+                if self.package_requirement:
                     self._logger.debug(
-                        "_load_data() Numpy Requirement: %s", self.numpy_requirement
+                        "_load_data() Pandas Requirement: %s", self.package_requirement
                     )
                 else:
-                    self._logger.debug("_load_data() Numpy Requirement not set.")
+                    self._logger.debug(
+                        "_load_data() %s Requirement not set.", self.package_requirement
+                    )
 
             control_options = {
                 "chkNumpy": "OptionLoadNumpy",
-                "txtNumpyVersion": "NumpyRequirement",
+                "txtPackageVersion": "PackageRequirement",
             }
             control_values = {
                 "chkNumpy": self.load_numpy,
-                "txtNumpyVersion": self.numpy_requirement,
+                "txtPackageVersion": self.package_requirement,
             }
             if self._logger.is_debug:
                 self._logger.debug("_load_data() controls: %s", control_options)
@@ -245,13 +247,13 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
                         control.Model
                     )  # cast("UnoControlCheckBoxModel", control.Model)
                     if hasattr(model, "Label"):
-                        if model.Name == "lblNumpyVersion":
+                        if model.Name == "lblPackageVersion":
                             res_val = self._resource_resolver.resolve_string(
                                 model.Label
                             )
-                            numpy_ver = self.get_numpy_version()
-                            if numpy_ver:
-                                model.Label = res_val.format(f"- {numpy_ver}")
+                            package_ver = self.get_package_version()
+                            if package_ver:
+                                model.Label = res_val.format(f"- {package_ver}")
                             else:
                                 model.Label = res_val.format("").rstrip()
                         else:
@@ -287,7 +289,7 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
                             "_load_data() txt_ctl_value: %s", txt_ctl_value
                         )
                         txt_control.setText(txt_ctl_value)
-                        if model.Name == "txtNumpyVersion":
+                        if model.Name == "txtPackageVersion":
                             model.HelpText = self._resource_resolver.resolve_string(
                                 "dlgOptVerHelp"
                             )
@@ -323,9 +325,9 @@ class OptionsDialogHandler(unohelper.Base, XContainerWindowEventHandler):
         self._load_numpy = value
 
     @property
-    def numpy_requirement(self) -> str:
-        return self._numpy_requirement
+    def package_requirement(self) -> str:
+        return self._package_requirement
 
-    @numpy_requirement.setter
-    def numpy_requirement(self, value: str):
-        self._numpy_requirement = value
+    @package_requirement.setter
+    def package_requirement(self, value: str):
+        self._package_requirement = value

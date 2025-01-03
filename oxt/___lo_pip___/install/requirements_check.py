@@ -5,8 +5,6 @@ No Internet needed.
 """
 
 from __future__ import annotations
-import sys
-from packaging.version import Version as PkgVersion
 
 from importlib.metadata import PackageNotFoundError, version
 
@@ -38,7 +36,7 @@ class RequirementsCheck(metaclass=Singleton):
             for name, ver in self._config.requirements.items()
         )
         if not requirements_met:
-            self._logger.error("Requirements not met.")
+            self._logger.debug("Requirements not met.")
             return False
 
         ver_rules = VerRules()

@@ -9,10 +9,10 @@
             dlg:height="12" dlg:value="load01" />
         <dlg:checkbox dlg:id="chkNumpy" dlg:tab-index="0" dlg:left="17" dlg:top="24" dlg:width="198"
             dlg:height="8" dlg:value="load03" dlg:checked="false" />
-        <dlg:text dlg:id="lblNumpyVersion" dlg:tab-index="0" dlg:left="5" dlg:top="48"
+        <dlg:text dlg:id="lblPackageVersion" dlg:tab-index="0" dlg:left="5" dlg:top="48"
             dlg:width="213"
             dlg:height="8" dlg:value="dlgOptLblNpVer" />
-        <dlg:textfield dlg:id="txtNumpyVersion" dlg:tab-index="2" dlg:left="17" dlg:top="60"
+        <dlg:textfield dlg:id="txtPackageVersion" dlg:tab-index="2" dlg:left="17" dlg:top="60"
             dlg:width="213"
             dlg:height="15" />
     </dlg:bulletinboard>
