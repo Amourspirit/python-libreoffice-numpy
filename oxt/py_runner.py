@@ -500,9 +500,7 @@ class ___lo_implementation_name___(unohelper.Base, XJob):
         """
         if ctx is None:
             ctx = uno.getComponentContext()
-        result = ctx.ServiceManager.createInstance(
-            "com.sun.star.util.PathSubstitution"
-        ).substituteVariables(  # type: ignore
+        result = ctx.ServiceManager.createInstance("com.sun.star.util.PathSubstitution").substituteVariables(  # type: ignore
             "$(user)", True
         )
         return uno.fileUrlToSystemPath(result) if as_sys_path else result
@@ -672,12 +670,19 @@ g_ImplementationHelper.addImplementation(
 
 from ___lo_pip___.dialog.handler import options as dialog_options
 from ___lo_pip___.dialog.handler import install as dialog_install
+from ___lo_pip___.dialog.handler import uninstall as dialog_uninstall
 
 g_ImplementationHelper.addImplementation(
     dialog_options.OptionsDialogHandler, dialog_options.IMPLEMENTATION_NAME, (dialog_options.IMPLEMENTATION_NAME,)
 )
 g_ImplementationHelper.addImplementation(
     dialog_install.OptionsDialogHandler, dialog_install.IMPLEMENTATION_NAME, (dialog_install.IMPLEMENTATION_NAME,)
+)
+
+g_ImplementationHelper.addImplementation(
+    dialog_uninstall.OptionsDialogUninstallHandler,
+    dialog_uninstall.IMPLEMENTATION_NAME,
+    (dialog_uninstall.IMPLEMENTATION_NAME,),
 )
 
 
