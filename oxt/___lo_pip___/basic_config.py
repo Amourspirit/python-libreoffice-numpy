@@ -7,7 +7,7 @@ import json
 class ConfigMeta(type):
     _instance = None
 
-    def __call__(cls, *args, **kwargs):
+    def __call__(cls, *args, **kwargs):  # noqa: ANN002, ANN003
         if cls._instance is None:
             root = Path(__file__).parent
             config_file = Path(root, "config.json")
@@ -19,15 +19,13 @@ class ConfigMeta(type):
 
 
 class BasicConfig(metaclass=ConfigMeta):
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, **kwargs) -> None:  # noqa: ANN003
         self._py_pkg_dir = str(kwargs["py_pkg_dir"])
         self._lo_identifier = str(kwargs["lo_identifier"])
         self._lo_pip_dir = str(kwargs["lo_pip"])
         self._lo_implementation_name = str(kwargs["lo_implementation_name"])
         self._zipped_preinstall_pure = bool(kwargs["zipped_preinstall_pure"])
-        self._auto_install_in_site_packages = bool(
-            kwargs["auto_install_in_site_packages"]
-        )
+        self._auto_install_in_site_packages = bool(kwargs["auto_install_in_site_packages"])
         self._install_wheel = bool(kwargs["install_wheel"])
         self._has_locals = bool(kwargs["has_locals"])
         self._window_timeout = int(kwargs["window_timeout"])
@@ -38,9 +36,8 @@ class BasicConfig(metaclass=ConfigMeta):
         self._isolate_windows = set(kwargs["isolate_windows"])
         self._sym_link_cpython = bool(kwargs["sym_link_cpython"])
         self._uninstall_on_update = bool(kwargs["uninstall_on_update"])
-        self._install_on_no_uninstall_permission = bool(
-            kwargs["install_on_no_uninstall_permission"]
-        )
+        self._install_on_no_uninstall_permission = bool(kwargs["install_on_no_uninstall_permission"])
+        self._no_pip_remove = set(kwargs["no_pip_remove"])
         self._oxt_name = str(kwargs["oxt_name"])
         self._extension_version = str(kwargs["extension_version"])
         self._extension_license = str(kwargs["extension_license"])
@@ -168,6 +165,17 @@ class BasicConfig(metaclass=ConfigMeta):
         The value for this property can be set in pyproject.toml (tool.oxt.token.lo_pip)
         """
         return self._lo_pip_dir
+
+    @property
+    def no_pip_remove(self) -> Set[str]:
+        """
+        Gets the pip packages that are not allowed to be removed.
+
+        The value for this property can be set in pyproject.toml (tool.oxt.config.no_pip_remove)
+
+        This is the packages that are not allowed to be removed by the installer.
+        """
+        return self._no_pip_remove
 
     @property
     def oxt_name(self) -> str:

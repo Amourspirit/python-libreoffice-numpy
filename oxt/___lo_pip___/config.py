@@ -52,9 +52,7 @@ class Config:
             # _set_requirements() needs VerRules which in turn needs packaging.
             # Because packaging is not available while the extension is being installed this is done here.
             # After extension is installed, packaging will be available.
-            cls._instance._requirements_set = cls._instance._set_requirements(
-                cls._instance._requirements
-            )
+            cls._instance._requirements_set = cls._instance._set_requirements(cls._instance._requirements)
         return cls._instance
 
     # region Init
@@ -91,13 +89,8 @@ class Config:
 
             self._session = Session()
             self._extension_info = ExtensionInfo()
-            self._auto_install_in_site_packages = (
-                self._basic_config.auto_install_in_site_packages
-            )
-            if (
-                not self._auto_install_in_site_packages
-                and os.getenv("DEV_CONTAINER", "") == "1"
-            ):
+            self._auto_install_in_site_packages = self._basic_config.auto_install_in_site_packages
+            if not self._auto_install_in_site_packages and os.getenv("DEV_CONTAINER", "") == "1":
                 # if running in a dev container (Codespace)
                 self._auto_install_in_site_packages = True
             self._log_level = logger_config.log_level
@@ -112,9 +105,7 @@ class Config:
             util = Util()
 
             # self._package_location = Path(file_util.get_package_location(self._lo_identifier, True))
-            self._package_location = Path(
-                self._extension_info.get_extension_loc(self.lo_identifier, True)
-            ).resolve()
+            self._package_location = Path(self._extension_info.get_extension_loc(self.lo_identifier, True)).resolve()
             self._python_major_minor = self._get_python_major_minor()
 
             self._is_user_installed = False
@@ -126,9 +117,7 @@ class Config:
                 self._python_path = Path(self.join(util.config("Module"), "python.exe"))
                 self._site_packages = self._get_windows_site_packages_dir()
             elif self._is_mac:
-                self._python_path = Path(
-                    self.join(util.config("Module"), "..", "Resources", "python")
-                ).resolve()
+                self._python_path = Path(self.join(util.config("Module"), "..", "Resources", "python")).resolve()
                 self._site_packages = self._get_mac_site_packages_dir()
             elif self._is_app_image:
                 self._python_path = Path(self.join(util.config("Module"), "python"))
@@ -230,10 +219,7 @@ class Config:
             if site.USER_SITE:
                 site_packages = Path(site.USER_SITE).resolve()
             else:
-                site_packages = (
-                    Path.home()
-                    / f".local/lib/python{self.python_major_minor}/site-packages"
-                )
+                site_packages = Path.home() / f".local/lib/python{self.python_major_minor}/site-packages"
             site_packages.mkdir(parents=True, exist_ok=True)
         return str(site_packages)
 
@@ -242,9 +228,7 @@ class Config:
         sand_box = os.getenv("FLATPAK_SANDBOX_DIR", "") or str(
             Path.home() / ".var/app/org.libreoffice.LibreOffice/sandbox"
         )
-        site_packages = (
-            Path(sand_box) / f"lib/python{self.python_major_minor}/site-packages"
-        )
+        site_packages = Path(sand_box) / f"lib/python{self.python_major_minor}/site-packages"
         site_packages.mkdir(parents=True, exist_ok=True)
         return str(site_packages)
 
@@ -258,8 +242,7 @@ class Config:
                 site_packages = Path(site.USER_SITE).resolve()
             else:
                 site_packages = (
-                    Path.home()
-                    / f"Library/LibreOfficePython/{self.python_major_minor}/lib/python/site-packages"
+                    Path.home() / f"Library/LibreOfficePython/{self.python_major_minor}/lib/python/site-packages"
                 )
             site_packages.mkdir(parents=True, exist_ok=True)
         return str(site_packages)
@@ -274,8 +257,7 @@ class Config:
                 site_packages = Path(site.USER_SITE).resolve()
             else:
                 site_packages = (
-                    Path.home()
-                    / f"'/AppData/Roaming/Python/Python{self.python_major_minor}/site-packages'"
+                    Path.home() / f"'/AppData/Roaming/Python/Python{self.python_major_minor}/site-packages'"
                 )
             site_packages.mkdir(parents=True, exist_ok=True)
         return str(site_packages)
@@ -724,6 +706,17 @@ class Config:
         The value for this property can be set in pyproject.toml (tool.oxt.config.package_name)
         """
         return self._basic_config.package_name
+
+    @property
+    def no_pip_remove(self) -> Set[str]:
+        """
+        Gets the pip packages that are not allowed to be removed.
+
+        The value for this property can be set in pyproject.toml (tool.oxt.config.no_pip_remove)
+
+        This is the packages that are not allowed to be removed by the installer.
+        """
+        return self._basic_config.no_pip_remove
 
     # endregion Properties
 
